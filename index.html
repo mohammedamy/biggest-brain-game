@@ -110,8 +110,9 @@ body{font-family:'Nunito',sans-serif;color:var(--w);font-size:16px}
 .cu-circle:active{transform:scale(.88)!important}
 .cu-circle.cu-done{opacity:.15;pointer-events:none;transition:all .3s}
 .cu-circle.cu-wrong{animation:sh .4s ease}
-@keyframes cubeEnter{from{opacity:0;transform:scale(.7) translateY(15px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.cube-svg{animation:cubeEnter .45s ease}
+@keyframes cubeEnter{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)}}
+.cube-svg{animation:cubeFall .6s ease-out}
+@keyframes cubeFall{from{opacity:0;transform:translateY(-40px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}}
 /* Volume slider */
 .vol-wrap{display:flex;align-items:center;gap:4px;flex-shrink:0}
 .vol-wrap input[type=range]{width:60px;height:4px;-webkit-appearance:none;background:rgba(255,255,255,.15);border-radius:2px;outline:none}
@@ -162,49 +163,78 @@ var RANKS=[{min:0,n:'Amoeba',i:'🦠'},{min:200,n:'Goldfish',i:'🐠'},{min:400,
 var OBJ=[{e:'🔴'},{e:'🟦'},{e:'🟢'},{e:'🔶'},{e:'🟣'},{e:'⭐'},{e:'🔺'},{e:'💎'},{e:'🟡'},{e:'🧊'},{e:'🪨'},{e:'🏀'},{e:'🍎'},{e:'🎾'},{e:'🧱'}];
 var S={m:'full',ci:0,qn:0,sc:0,cs:{},tm:0,ti:null,ap:false,name:'',st:0,best:parseInt(localStorage.getItem('e8b')||'0'),cb:JSON.parse(localStorage.getItem('e8c')||'{}'),all:JSON.parse(localStorage.getItem('e8a')||'[]')};
 var sndOn=true,musicOk=false,vol=0.7;
+var gameLoop,homeLoop,cdLoop,gamePlaying=false,homePlaying=false;
 
-// ===== MUSIC (clean orchestral + countdown music) =====
+// ===== MUSIC: 3 separate tracks =====
 var sfxOk,sfxNo,sfxCdBeat,sfxCdGo;
+var homeSynths={},gameSynths={},cdSynths={};
+
 function initMusic(){if(musicOk)return;musicOk=true;Tone.start();
   Tone.Master.volume.value=Tone.gainToDb(vol);
-  // Create REUSABLE SFX synths (never recreated)
+  // SFX
   sfxOk=new Tone.Synth({oscillator:{type:'triangle'},envelope:{attack:.01,decay:.15,sustain:0,release:.1},volume:-12}).toDestination();
   sfxNo=new Tone.Synth({oscillator:{type:'sawtooth'},envelope:{attack:.01,decay:.2,sustain:0,release:.15},volume:-16}).toDestination();
   sfxCdBeat=new Tone.MembraneSynth({pitchDecay:.08,octaves:4,envelope:{attack:.005,decay:.25,sustain:0,release:.4},volume:-10}).toDestination();
   sfxCdGo=new Tone.Synth({oscillator:{type:'triangle'},envelope:{attack:.01,decay:.35,sustain:0,release:.2},volume:-8}).toDestination();
 
-  // --- GAME BACKGROUND MUSIC ---
-  // Warm pad (strings)
-  var pad=new Tone.PolySynth(Tone.Synth,{oscillator:{type:'sine'},envelope:{attack:.5,decay:.6,sustain:.5,release:1.5},volume:-22}).toDestination();
-  // Gentle melody (bell-like)
-  var bell=new Tone.Synth({oscillator:{type:'triangle'},envelope:{attack:.02,decay:.4,sustain:.15,release:.8},volume:-16}).toDestination();
-  // Light bass
-  var bass=new Tone.Synth({oscillator:{type:'sine'},envelope:{attack:.05,decay:.3,sustain:.4,release:.6},volume:-18}).toDestination();
-  // Soft kick
-  var kick=new Tone.MembraneSynth({pitchDecay:.05,octaves:5,envelope:{attack:.002,decay:.2,sustain:0,release:.5},volume:-14}).toDestination();
-  // Gentle hat
-  var hat=new Tone.NoiseSynth({noise:{type:'white'},envelope:{attack:.001,decay:.04,sustain:0,release:.02},volume:-28}).toDestination();
+  // === HOME STANDBY MUSIC: dreamy, gentle, inviting ===
+  homeSynths.pad=new Tone.PolySynth(Tone.Synth,{oscillator:{type:'sine'},envelope:{attack:.8,decay:1,sustain:.5,release:2},volume:-24}).toDestination();
+  homeSynths.bell=new Tone.Synth({oscillator:{type:'triangle'},envelope:{attack:.05,decay:.6,sustain:.1,release:1},volume:-20}).toDestination();
+  var hChords=[['C3','E3','G3','B3'],['F3','A3','C4','E4'],['D3','F3','A3','C4'],['G3','B3','D4','F4']];
+  var hMel=['E4','G4','B4','C5','A4','F4','D4','E4','G4','A4','C5','B4','G4','E4','D4','C4'];
+  var hBeat=0;
+  homeLoop=new Tone.Loop(function(t){
+    if(!sndOn)return;var bar=Math.floor(hBeat/8)%4;
+    if(hBeat%8===0)homeSynths.pad.triggerAttackRelease(hChords[bar],'1m',t,.35);
+    if(hBeat%3===0)homeSynths.bell.triggerAttackRelease(hMel[hBeat%hMel.length],'4n',t,.3);
+    hBeat++},'0.5s');
 
-  var chords=[['C3','E3','G3'],['F3','A3','C4'],['G3','B3','D4'],['A3','C4','E4']];
-  var mel=['E4','G4','C5','B4','A4','G4','E4','D4','C4','E4','G4','A4','B4','C5','A4','G4'];
-  var bassN=['C2','F2','G2','A2'];
-  var beat=0;
-  var loop=new Tone.Loop(function(t){
+  // === GAME MUSIC: upbeat, dancing, cheerful with drums ===
+  gameSynths.pad=new Tone.PolySynth(Tone.Synth,{oscillator:{type:'sine'},envelope:{attack:.15,decay:.3,sustain:.5,release:.8},volume:-21}).toDestination();
+  gameSynths.lead=new Tone.Synth({oscillator:{type:'triangle'},envelope:{attack:.02,decay:.2,sustain:.2,release:.5},volume:-15}).toDestination();
+  gameSynths.bass=new Tone.Synth({oscillator:{type:'sine'},envelope:{attack:.03,decay:.2,sustain:.4,release:.4},volume:-17}).toDestination();
+  gameSynths.pluck=new Tone.Synth({oscillator:{type:'triangle'},envelope:{attack:.005,decay:.1,sustain:0,release:.15},volume:-18}).toDestination();
+  gameSynths.kick=new Tone.MembraneSynth({pitchDecay:.04,octaves:5,envelope:{attack:.002,decay:.15,sustain:0,release:.3},volume:-13}).toDestination();
+  gameSynths.hat=new Tone.NoiseSynth({noise:{type:'white'},envelope:{attack:.001,decay:.03,sustain:0,release:.015},volume:-26}).toDestination();
+  gameSynths.snare=new Tone.NoiseSynth({noise:{type:'pink'},envelope:{attack:.003,decay:.08,sustain:0,release:.03},volume:-20}).toDestination();
+  var gChords=[['C3','E3','G3'],['F3','A3','C4'],['G3','B3','D4'],['Am3','C4','E4']];
+  var gMel=['C5','D5','E5','G5','E5','D5','C5','A4','G4','A4','C5','D5','E5','G5','A5','G5'];
+  var gBass=['C2','C2','F2','F2','G2','G2','A2','A2'];
+  var gPlk=['E4','G4','C5','E4','A4','C5','B4','D5'];
+  var gBeat=0;
+  gameLoop=new Tone.Loop(function(t){
+    if(!sndOn)return;var bar=Math.floor(gBeat/8)%4;
+    if(gBeat%8===0)gameSynths.pad.triggerAttackRelease(gChords[bar],'2n',t,.45);
+    gameSynths.lead.triggerAttackRelease(gMel[gBeat%gMel.length],'16n',t,.4);
+    if(gBeat%2===0)gameSynths.bass.triggerAttackRelease(gBass[gBeat%gBass.length],'8n',t,.5);
+    if(gBeat%2===1)gameSynths.pluck.triggerAttackRelease(gPlk[gBeat%gPlk.length],'16n',t,.35);
+    // Drums: kick 1&3, snare 2&4, hat every beat
+    if(gBeat%4===0||gBeat%4===2)gameSynths.kick.triggerAttackRelease('C1','16n',t);
+    if(gBeat%4===1||gBeat%4===3)gameSynths.snare.triggerAttackRelease('16n',t);
+    gameSynths.hat.triggerAttackRelease('32n',t);
+    gBeat++},'0.22s');
+
+  // === COUNTDOWN MUSIC: dramatic ascending build ===
+  cdSynths.drum=new Tone.MembraneSynth({pitchDecay:.06,octaves:5,envelope:{attack:.003,decay:.2,sustain:0,release:.3},volume:-10}).toDestination();
+  cdSynths.riser=new Tone.Synth({oscillator:{type:'sawtooth'},envelope:{attack:.3,decay:.2,sustain:.5,release:.5},volume:-20}).toDestination();
+  cdSynths.tick=new Tone.Synth({oscillator:{type:'square'},envelope:{attack:.005,decay:.08,sustain:0,release:.05},volume:-18}).toDestination();
+  var cdBeat=0,cdNote=0;
+  cdLoop=new Tone.Loop(function(t){
     if(!sndOn)return;
-    var bar=Math.floor(beat/8)%4;
-    // Pad chord every 8 beats
-    if(beat%8===0)pad.triggerAttackRelease(chords[bar],'1n',t,.5);
-    // Bass on 1 and 5
-    if(beat%8===0||beat%8===4)bass.triggerAttackRelease(bassN[bar],'4n',t,.6);
-    // Melody every 2 beats
-    if(beat%2===0)bell.triggerAttackRelease(mel[beat%mel.length],'8n',t,.45);
-    // Kick on 1 and 5
-    if(beat%8===0||beat%8===4)kick.triggerAttackRelease('C1','8n',t);
-    // Hat on even beats
-    if(beat%2===0)hat.triggerAttackRelease('32n',t+0.05);
-    beat++
-  },'0.35s');
-  loop.start(0);Tone.Transport.bpm.value=110;Tone.Transport.start()}
+    var notes=['G3','A3','B3','C4','D4','E4','F4','G4'];
+    cdSynths.tick.triggerAttackRelease(notes[Math.min(cdNote,notes.length-1)],'32n',t);
+    if(cdBeat%2===0)cdSynths.drum.triggerAttackRelease('C2','8n',t);
+    cdNote++;cdBeat++},'0.25s');
+
+  Tone.Transport.bpm.value=130;Tone.Transport.start();startHomeMusic()}
+
+function startHomeMusic(){if(!musicOk)return;stopAllMusic();homeLoop.start(0);homePlaying=true}
+function startGameMusic(){if(!musicOk)return;stopAllMusic();gameLoop.start(0);gamePlaying=true}
+function startCdMusic(){if(!musicOk)return;stopAllMusic();cdLoop.start(0)}
+function stopAllMusic(){
+  try{homeLoop.stop();homePlaying=false}catch(e){}
+  try{gameLoop.stop();gamePlaying=false}catch(e){}
+  try{cdLoop.stop()}catch(e){}}
 function toggleSnd(){sndOn=!sndOn;var icon=sndOn?'🔊':'🔇';
   var sb=document.getElementById('sndBtn');if(sb)sb.textContent=icon;
   var hsb=document.getElementById('homeSndBtn');if(hsb)hsb.textContent=icon;
@@ -221,7 +251,7 @@ function playGo(){if(!sndOn||!sfxCdGo)return;try{sfxCdGo.triggerAttackRelease('C
 
 // ===== NAV =====
 function show(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});document.getElementById(id).classList.add('active')}
-function goHome(){clearInterval(S.ti);S.ap=false;updR();show('homeScreen')}
+function goHome(){clearInterval(S.ti);S.ap=false;updR();show('homeScreen');if(musicOk)startHomeMusic()}
 function updR(){var r=gR(S.best);document.getElementById('hRI').textContent=r.i;document.getElementById('hRN').textContent=r.n;document.getElementById('hRS').textContent=S.best>0?'Best: '+S.best:'Play to get ranked!'}
 function gR(s){var r=RANKS[0];for(var i=0;i<RANKS.length;i++)if(s>=RANKS[i].min)r=RANKS[i];return r}
 function ri(a,b){return Math.floor(Math.random()*(b-a+1))+a}
@@ -235,10 +265,11 @@ function startFull(){S.m='full';S.ci=0;S.cs={};startC(0)}
 function showPractice(){var l=document.getElementById('catList');l.innerHTML='';CATS.forEach(function(c,i){var b=S.cb[c.id]||0;l.innerHTML+='<button class="btn bcat" onclick="startPr('+i+')"><div class="ci">'+c.icon+'</div><div><div class="cn">'+c.name+'</div><div class="cd">'+c.desc+'</div>'+(b?'<div class="cb">Best:'+b+'</div>':'')+'</div></button>'});show('practiceScreen')}
 function startPr(i){S.m='practice';S.ci=i;S.cs={};S.name=S.name||'Practice';initMusic();startC(i)}
 function startC(i){showCD(i,function(){beginC(i)})}
-function beginC(i){S.qn=0;S.sc=0;S.st=Date.now();document.getElementById('ghC').innerHTML=CATS[i].icon+' '+CATS[i].name;show('gameScreen');nxt()}
+function beginC(i){S.qn=0;S.sc=0;S.st=Date.now();document.getElementById('ghC').innerHTML=CATS[i].icon+' '+CATS[i].name;show('gameScreen');startGameMusic();nxt()}
 function showCD(ci,cb){var cat=CATS[ci];var ov=document.createElement('div');ov.className='countdown-overlay';
   ov.innerHTML='<div class="countdown-cat-icon">'+cat.icon+'</div><div class="countdown-cat">'+cat.name+'</div><div class="countdown-num cd-3">3</div>';
-  document.body.appendChild(ov);var n=ov.querySelector('.countdown-num');playCd(3);
+  document.body.appendChild(ov);var n=ov.querySelector('.countdown-num');
+  startCdMusic();playCd(3);
   setTimeout(function(){n.className='countdown-num cd-2';n.textContent='2';n.style.animation='none';n.offsetHeight;n.style.animation='cdP .4s ease';playCd(2)},1000);
   setTimeout(function(){n.className='countdown-num cd-1';n.textContent='1';n.style.animation='none';n.offsetHeight;n.style.animation='cdP .4s ease';playCd(1)},2000);
   setTimeout(function(){n.className='countdown-go';n.textContent='GO!';n.style.animation='none';n.offsetHeight;n.style.animation='cdP .3s ease';playGo()},3000);
@@ -332,10 +363,18 @@ function gVis(d){var c=document.getElementById('gCard');legoIn='';legoKB=true;
   function makePile(gW,gD,mH){
     var grid=[];var tot=0;
     for(var r=0;r<gD;r++){grid[r]=[];for(var cc=0;cc<gW;cc++){
-      // Taller stacks in back (low r), shorter in front (high r)
-      var rowMax=Math.max(1,mH-r);
-      var h=ri(0,rowMax);grid[r][cc]=h;tot+=h}}
-    if(tot===0){grid[0][0]=1;tot=1}return{grid:grid,gW:gW,gD:gD,tot:tot}}
+      // Strictly: back rows (r=0) tallest, front rows shortest
+      var rowMax=Math.max(1,mH-r*2);
+      var rowMin=r===0?1:0; // back row always has at least 1
+      var h=ri(rowMin,rowMax);grid[r][cc]=h;tot+=h}}
+    if(tot===0){grid[0][0]=1;tot=1}
+    // Ensure every column's top cube is visible: no front column taller than back
+    for(var cc=0;cc<gW;cc++){for(var r=1;r<gD;r++){
+      if(grid[r][cc]>=grid[r-1][cc]&&grid[r-1][cc]>0){
+        grid[r][cc]=Math.max(0,grid[r-1][cc]-1);
+        tot=0;for(var rr=0;rr<gD;rr++)for(var c2=0;c2<gW;c2++)tot+=grid[rr][c2]}}}
+    if(tot===0){grid[0][0]=1;tot=1}
+    return{grid:grid,gW:gW,gD:gD,tot:tot}}
   var piles=[];
   if(!useTwoPiles){
     var gW=2+Math.min(Math.floor(d/2)+1,3),gD=2+Math.min(Math.floor(d/3),1),mH=2+Math.min(d,3);
