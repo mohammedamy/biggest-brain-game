@@ -60,14 +60,14 @@ body{font-family:'Nunito',sans-serif;color:var(--w);font-size:16px}
 .ob-1{background:rgba(77,150,255,.2);color:#8AB8FF;border-color:rgba(77,150,255,.35)}
 .ob-2{background:rgba(107,203,119,.2);color:#8FE09C;border-color:rgba(107,203,119,.35)}
 .ob-3{background:rgba(255,217,61,.2);color:#FFE580;border-color:rgba(255,217,61,.35)}
-.ins{font-size:clamp(.75rem,2.2vw,.95rem);text-align:center;opacity:.75;margin-bottom:4px;font-style:italic;flex-shrink:0}
+.ins{font-family:'Fredoka',sans-serif;font-size:16px;font-weight:700;color:var(--yellow);text-align:center;margin-bottom:5px;flex-shrink:0;text-shadow:0 1px 4px rgba(240,215,43,.2)}
 .cd2{font-family:'Fredoka',sans-serif;font-size:clamp(1.6rem,5.5vw,2.5rem);font-weight:700;text-align:center;margin-bottom:7px;color:var(--yellow);flex-shrink:0}
 .pi2{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:5px}
 .cw{font-family:'Fredoka',sans-serif;font-size:clamp(4rem,13vw,5.5rem);font-weight:700;text-align:center;margin-bottom:8px;flex-shrink:0;padding:10px 20px;border-radius:14px}
 .numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:100%;max-width:210px;margin:0 auto}
-.numpad .nk{font-family:'Fredoka',sans-serif;font-size:1.2rem;font-weight:700;padding:7px 0;border-radius:9px;border:2px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--w);cursor:pointer;text-align:center;touch-action:manipulation}
+.numpad .nk{font-family:'Fredoka',sans-serif;font-size:1.9rem;font-weight:700;padding:9px 0;border-radius:9px;border:2px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--w);cursor:pointer;text-align:center;touch-action:manipulation}
 .numpad .nk:active{background:rgba(42,191,191,.2);border-color:var(--teal);transform:scale(.95)}
-.numpad .nk.nk-del{font-size:.9rem;background:rgba(255,80,80,.1);border-color:rgba(255,80,80,.2)}
+.numpad .nk.nk-del{font-size:1.4rem;background:rgba(255,80,80,.1);border-color:rgba(255,80,80,.2)}
 .bwrap{width:100%;flex-shrink:0;margin-bottom:24px;display:grid;grid-template-columns:1fr 1fr;gap:32px 20px}
 .bitem{}.bbeam{display:flex;align-items:flex-end;justify-content:center;position:relative;height:clamp(50px,8.5vh,70px);width:100%}
 .bful{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:14px solid rgba(0,0,0,.7)}
@@ -297,7 +297,7 @@ function genOp2(d,c){var ops=[{s:'+',f:function(a,b){return a+b}},{s:'−',f:fun
 var memS=[],memI=0,memKB=false;
 function gMem(d){var c=document.getElementById('gCard');var len=3+Math.min(d,4);memS=[];memI=0;memKB=false;
   for(var i=0;i<len;i++)memS.push(ri(1,9));c.innerHTML='<div class="ins">Memorize!</div><div class="cd2">'+memS.join('  ')+'</div>';
-  setTimeout(function(){if(!S.ap)return;showMI(len)},1200+Math.min(d,3)*375)}
+  setTimeout(function(){if(!S.ap)return;showMI(len)},2400+Math.min(d,3)*750)}
 function showMI(len){var c=document.getElementById('gCard');memI=0;memKB=true;
   var bx='';for(var i=0;i<len;i++)bx+='<div id="mb'+i+'" style="width:38px;height:42px;border-radius:7px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);display:inline-flex;align-items:center;justify-content:center;font-family:Fredoka;font-size:1.2rem;font-weight:700"></div>';
   c.innerHTML='<div class="ins">Enter sequence</div><div class="pi2">'+bx+'</div><div class="numpad"><div class="nk" onclick="nT(1)">1</div><div class="nk" onclick="nT(2)">2</div><div class="nk" onclick="nT(3)">3</div><div class="nk" onclick="nT(4)">4</div><div class="nk" onclick="nT(5)">5</div><div class="nk" onclick="nT(6)">6</div><div class="nk" onclick="nT(7)">7</div><div class="nk" onclick="nT(8)">8</div><div class="nk" onclick="nT(9)">9</div><div class="nk nk-del" onclick="nD()">⌫</div><div class="nk" onclick="nT(0)">0</div><div class="nk nk-del" onclick="nD()">⌫</div></div>';hlM()}
@@ -354,6 +354,7 @@ function gVis(d){var c=document.getElementById('gCard');legoIn='';legoKB=true;
 
   // Render SVG with TEXTURED cubes (wood grain, cheese holes, stone, fabric)
   var CW=34,CH=20,CV=24;
+  var oy; // will be set after computing maxH
   // Pick a single texture theme for this question
   var textures=['wood','cheese','stone','brick','fabric','candy','marble','denim'];
   var theme=textures[ri(0,textures.length-1)];
@@ -423,17 +424,35 @@ function gVis(d){var c=document.getElementById('gCard');legoIn='';legoKB=true;
   var maxGW=0,maxGD=0,maxH=0;
   piles.forEach(function(p){if(p.gW>maxGW)maxGW=p.gW;if(p.gD>maxGD)maxGD=p.gD;
     for(var r=0;r<p.gD;r++)for(var cc=0;cc<p.gW;cc++){if(p.grid[r][cc]>maxH)maxH=p.grid[r][cc]}});
-  var totalW=useTwoPiles?(maxGW*2+maxGD*2+4)*CW+40:(maxGW+maxGD)*CW+55;
-  var svgH=(maxGW+maxGD)*CH+maxH*CV+55;
-  var oy=18+maxH*CV;
-  var svg='<svg class="cube-svg" viewBox="0 0 '+totalW+' '+svgH+'" style="width:100%;max-width:'+Math.min(totalW,520)+'px;max-height:clamp(195px,42vh,345px);flex-shrink:0">';
+
+  // Compute actual SVG dimensions from isometric math
+  var pad=30;
+  var oy=pad+maxH*CV; // origin Y: enough room above for tallest stack
+
   if(useTwoPiles){
-    var ox1=piles[0].gD*CW+25;
-    var ox2=ox1+(piles[0].gW+piles[0].gD+3)*CW;
-    svg+=renderPile(piles[0],ox1);svg+=renderPile(piles[1],ox2);
+    // Compute each pile's extent
+    var p1=piles[0],p2=piles[1];
+    var ox1=p1.gD*CW+pad;
+    var gap=3*CW; // gap between piles
+    var ox2=ox1+(p1.gW+p1.gD)*CW+gap;
+    // Rightmost point: ox2 + p2.gW*CW
+    var rightEdge=ox2+p2.gW*CW+pad;
+    // Bottom: max of both piles
+    var bot1=oy+(p1.gW+p1.gD-2)*CH+2*CH+pad;
+    var bot2=oy+(p2.gW+p2.gD-2)*CH+2*CH+pad;
+    var svgH=Math.max(bot1,bot2);
+    var totalW=rightEdge;
+    var svg='<svg class="cube-svg" viewBox="0 0 '+totalW+' '+svgH+'" style="width:100%;max-height:clamp(180px,40vh,320px);flex-shrink:0">';
+    svg+=renderPile(p1,ox1);svg+=renderPile(p2,ox2);
   } else {
-    var ox=piles[0].gD*CW+28;
-    svg+=renderPile(piles[0],ox);
+    var p1=piles[0];
+    var ox=p1.gD*CW+pad;
+    var rightEdge=ox+p1.gW*CW+pad;
+    var leftEdge=ox-p1.gD*CW;
+    var totalW=Math.max(rightEdge,rightEdge-leftEdge+pad);
+    var svgH=oy+(p1.gW+p1.gD-2)*CH+2*CH+pad;
+    var svg='<svg class="cube-svg" viewBox="'+(leftEdge<0?leftEdge-5:0)+' 0 '+(totalW-Math.min(0,leftEdge)+10)+' '+svgH+'" style="width:100%;max-height:clamp(180px,40vh,320px);flex-shrink:0">';
+    svg+=renderPile(p1,ox);
   }
   svg+='</svg>';
   c.innerHTML='<div class="ins">Count ALL cubes (hidden too)</div>'+svg+'<div style="font-family:Fredoka;font-size:1.7rem;font-weight:700;color:var(--yellow);min-height:2rem;text-align:center;margin:2px 0" id="lD">_</div><div class="numpad"><div class="nk" onclick="lT(1)">1</div><div class="nk" onclick="lT(2)">2</div><div class="nk" onclick="lT(3)">3</div><div class="nk" onclick="lT(4)">4</div><div class="nk" onclick="lT(5)">5</div><div class="nk" onclick="lT(6)">6</div><div class="nk" onclick="lT(7)">7</div><div class="nk" onclick="lT(8)">8</div><div class="nk" onclick="lT(9)">9</div><div class="nk nk-del" onclick="lDl()">⌫</div><div class="nk" onclick="lT(0)">0</div><div class="nk" style="background:rgba(91,200,160,.1);border-color:var(--green)" onclick="lSb()">✓</div></div>'}
