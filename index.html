@@ -294,11 +294,14 @@ function genOp2(d,c){var ops=[{s:'+',f:function(a,b){return a+b}},{s:'−',f:fun
   c.innerHTML='<div class="ins">Which two ops?</div><div class="cd2" style="font-size:clamp(1.2rem,4vw,1.7rem)">'+a+' <span style="color:var(--teal)">?</span> '+b2+' <span style="color:var(--teal)">?</span> '+c2+' = '+res+'</div><div class="og">'+ch.map(function(x,i){return'<button class="ob ob-'+i+'" style="font-size:1.1rem" dv="'+x+'" onclick="chkS(this,\''+x+'\',\''+ak+'\')">'+x+'</button>'}).join('')+'</div>'}
 
 // ===== MEMORIZE =====
-var memS=[],memI=0,memKB=false;
-function gMem(d){var c=document.getElementById('gCard');var len=3+Math.min(d,4);memS=[];memI=0;memKB=false;
-  for(var i=0;i<len;i++)memS.push(ri(1,9));c.innerHTML='<div class="ins">Memorize!</div><div class="cd2">'+memS.join('  ')+'</div>';
-  setTimeout(function(){if(!S.ap)return;showMI(len)},2400+Math.min(d,3)*750)}
-function showMI(len){var c=document.getElementById('gCard');memI=0;memKB=true;
+var memS=[],memI=0,memKB=false,memTimer=null,memLen=0;
+function gMem(d){var c=document.getElementById('gCard');var len=3+Math.min(d,4);memS=[];memI=0;memKB=false;memLen=len;
+  for(var i=0;i<len;i++)memS.push(ri(1,9));
+  c.innerHTML='<div class="ins">Memorize!</div><div class="cd2">'+memS.join('  ')+'</div><div style="font-size:12px;opacity:.35;margin-top:8px;text-align:center">Tap screen when ready</div>';
+  memTimer=setTimeout(function(){if(!S.ap)return;memTimer=null;showMI(len)},2400+Math.min(d,3)*750);
+  // Tap/click anywhere on card to skip to input immediately
+  c.onclick=function(){if(memTimer){clearTimeout(memTimer);memTimer=null;c.onclick=null;showMI(memLen)}}}
+function showMI(len){var c=document.getElementById('gCard');c.onclick=null;memI=0;memKB=true;
   var bx='';for(var i=0;i<len;i++)bx+='<div id="mb'+i+'" style="width:38px;height:42px;border-radius:7px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);display:inline-flex;align-items:center;justify-content:center;font-family:Fredoka;font-size:1.2rem;font-weight:700"></div>';
   c.innerHTML='<div class="ins">Enter sequence</div><div class="pi2">'+bx+'</div><div class="numpad"><div class="nk" onclick="nT(1)">1</div><div class="nk" onclick="nT(2)">2</div><div class="nk" onclick="nT(3)">3</div><div class="nk" onclick="nT(4)">4</div><div class="nk" onclick="nT(5)">5</div><div class="nk" onclick="nT(6)">6</div><div class="nk" onclick="nT(7)">7</div><div class="nk" onclick="nT(8)">8</div><div class="nk" onclick="nT(9)">9</div><div class="nk nk-del" onclick="nD()">⌫</div><div class="nk" onclick="nT(0)">0</div><div class="nk nk-del" onclick="nD()">⌫</div></div>';hlM()}
 function nT(n){if(!S.ap||memI>=memS.length)return;var b=document.getElementById('mb'+memI);b.textContent=n;b.setAttribute('dv',n);memI++;hlM();if(memI>=memS.length)subM()}
