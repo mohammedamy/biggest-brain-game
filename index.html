@@ -44,7 +44,7 @@ body{font-family:'Nunito',sans-serif;color:var(--w);font-size:16px}
 @keyframes tp{0%{transform:scale(1)}100%{transform:scale(1.12)}}
 .pb{width:100%;height:4px;background:rgba(255,255,255,.08);border-radius:2px;margin:2px 0;flex-shrink:0;overflow:hidden}
 .pb .f{height:100%;background:linear-gradient(90deg,var(--teal),var(--yellow));border-radius:2px;transition:width .3s}
-.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:7px 9px;width:100%;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;overflow:hidden}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:7px 9px;width:100%;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;overflow-y:auto;overflow-x:hidden}
 /* MCQ buttons: 2x font, bold, colored */
 .og{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%}
 .og.og3{grid-template-columns:1fr 1fr 1fr}
@@ -442,7 +442,7 @@ function gVis(d){var c=document.getElementById('gCard');legoIn='';legoKB=true;
     var bot2=oy+(p2.gW+p2.gD-2)*CH+2*CH+pad;
     var svgH=Math.max(bot1,bot2);
     var totalW=rightEdge;
-    var svg='<svg class="cube-svg" viewBox="0 0 '+totalW+' '+svgH+'" style="width:100%;max-height:clamp(180px,40vh,320px);flex-shrink:0">';
+    var svg='<svg class="cube-svg" viewBox="0 0 '+totalW+' '+svgH+'" style="width:100%;flex-shrink:1;max-height:100%;max-width:100%">';
     svg+=renderPile(p1,ox1);svg+=renderPile(p2,ox2);
   } else {
     var p1=piles[0];
@@ -451,11 +451,23 @@ function gVis(d){var c=document.getElementById('gCard');legoIn='';legoKB=true;
     var leftEdge=ox-p1.gD*CW;
     var totalW=Math.max(rightEdge,rightEdge-leftEdge+pad);
     var svgH=oy+(p1.gW+p1.gD-2)*CH+2*CH+pad;
-    var svg='<svg class="cube-svg" viewBox="'+(leftEdge<0?leftEdge-5:0)+' 0 '+(totalW-Math.min(0,leftEdge)+10)+' '+svgH+'" style="width:100%;max-height:clamp(180px,40vh,320px);flex-shrink:0">';
+    var svg='<svg class="cube-svg" viewBox="'+(leftEdge<0?leftEdge-5:0)+' 0 '+(totalW-Math.min(0,leftEdge)+10)+' '+svgH+'" style="width:100%;flex-shrink:1;max-height:100%;max-width:100%">';
     svg+=renderPile(p1,ox);
   }
   svg+='</svg>';
-  c.innerHTML='<div class="ins">Count ALL cubes (hidden too)</div>'+svg+'<div style="font-family:Fredoka;font-size:1.7rem;font-weight:700;color:var(--yellow);min-height:2rem;text-align:center;margin:2px 0" id="lD">_</div><div class="numpad"><div class="nk" onclick="lT(1)">1</div><div class="nk" onclick="lT(2)">2</div><div class="nk" onclick="lT(3)">3</div><div class="nk" onclick="lT(4)">4</div><div class="nk" onclick="lT(5)">5</div><div class="nk" onclick="lT(6)">6</div><div class="nk" onclick="lT(7)">7</div><div class="nk" onclick="lT(8)">8</div><div class="nk" onclick="lT(9)">9</div><div class="nk nk-del" onclick="lDl()">⌫</div><div class="nk" onclick="lT(0)">0</div><div class="nk" style="background:rgba(91,200,160,.1);border-color:var(--green)" onclick="lSb()">✓</div></div>'}
+  // Compact layout: SVG shrinks to fit, answer+numpad always visible
+  c.innerHTML='<div class="ins">Count ALL cubes (hidden too)</div>'+
+    '<div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;width:100%">'+svg+'</div>'+
+    '<div style="flex-shrink:0;width:100%;padding-top:3px">'+
+      '<div style="font-family:Fredoka;font-size:1.5rem;font-weight:700;color:var(--yellow);text-align:center;margin:1px 0;line-height:1.3" id="lD">_</div>'+
+      '<div class="numpad" style="max-width:200px;gap:3px">'+
+        '<div class="nk" onclick="lT(1)">1</div><div class="nk" onclick="lT(2)">2</div><div class="nk" onclick="lT(3)">3</div>'+
+        '<div class="nk" onclick="lT(4)">4</div><div class="nk" onclick="lT(5)">5</div><div class="nk" onclick="lT(6)">6</div>'+
+        '<div class="nk" onclick="lT(7)">7</div><div class="nk" onclick="lT(8)">8</div><div class="nk" onclick="lT(9)">9</div>'+
+        '<div class="nk nk-del" onclick="lDl()">⌫</div><div class="nk" onclick="lT(0)">0</div>'+
+        '<div class="nk" style="background:rgba(91,200,160,.1);border-color:var(--green)" onclick="lSb()">✓</div>'+
+      '</div>'+
+    '</div>'}
 function lT(n){if(!S.ap||legoIn.length>=3)return;legoIn+=n;document.getElementById('lD').textContent=legoIn}
 function lDl(){if(!S.ap||!legoIn.length)return;legoIn=legoIn.slice(0,-1);document.getElementById('lD').textContent=legoIn||'_'}
 function lSb(){if(!S.ap||!legoIn.length)return;S.ap=false;legoKB=false;var v=parseInt(legoIn),d=document.getElementById('lD');
