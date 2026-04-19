@@ -135,11 +135,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     </div>
     <div class="bg2">
       <button class="btn bp" onclick="askName()">🚀 Play All Categories</button>
+      <button class="btn bs" onclick="askCompCode()">🏆 Competition Mode</button>
       <button class="btn bs" onclick="showPractice()">🎯 Practice</button>
-      <button class="btn bs" onclick="showLB()">🏆 Leaderboard</button>
+      <button class="btn bs" onclick="showLB()">📊 Leaderboard</button>
     </div>
   </div>
-  <div class="screen" id="nameScreen"><div class="ct"><img class="ct-logo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAyACEDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDt9a+Olh4V+I174U8UWt6tlGlu8Wp29zM7IZIldvNiDjIyx5TkD+E13Oo+K2uNL0TVvDt9b6np99dvFJdQXk0se0BcDIk+VsluDzx0ryvU/hVoHjH43XupeLfEEVpp7xWog06Bm+0XhW3TILAYRSQQACWboMcGvTbLxX8G9RtbDwV4d1m2s5LSYta6faWksREkasSrAx9eGJzzwc81x18HVbdeDldRel3Z3Wjt3XRq3zOetWjUpOFOSvda3Wlmrr/MPG+seLNN0+41PSQs1lAn7/Ms5eHIOG/1nK8de30rw39m74ieP9e8cPpmp+INV1qGZIwY7i4kby13/O67SMELnk5Fe3aj4tudNjuE0ubTb6G6iKspRiw4PB6Ag5ryP9mnw/r3gHxlJNcrYypqtpFbSEZYwkyZZO3OO44OPauDhuvi3llH6+r1Une6s93a+i1St/WpyYrFYf6xVVKq7Nxt1t35ddn+H4Hs39s6t/0Frz/v8aKobRRXsnqHB/EhgPFkoJAJt7fHP/TJa1PAegf2p4/0Xxlq+m39peaY7SSar9nYRXcflMu2cnGXAI2yDJONrA8EaXxHTVpZDp2l6zP4S1WGCMNdQ28UhkOwfLKwUyLjoGjbgfwmuN+DXw9+JC/FnS/E/jHUpp7GwmeSK5ub97r7ZmJwPJ5PGGySQuMYxnivS+t0lQ96SjZW189Evm9D5TC4F/Xp1KdS7cndJefX072+Z13i25s73Xbi70+xeztZG+VWUjce7Y7Z64qHw1/yMWnf9fMf/oQrrfivp+sa94Y/4SPw1ewXl+kKywaVeuI1KEZKrggh/c9fyrxf4L+I/G/i3x9aWX/CN2Vja2cyy31xOZE8pFPKru+85xgAfyrx+V3M5ZfVdbnVmr36L8D12ik3D0NFbH1532l+HNN1W/XxNqVsst1dIjiBm3RREKBxwN3TqR+FRaj4rjk8Y2Ph7TmjIEjC6lwCFIRiEH0IGT+HrXzp4g8dfEXQvjjqOh+DlvdXgube136SoZ0ObePcykcwn/bBA7nNe4eEPBd7p5tNXubN49QkUkWs0yyJaMVORI6f6zqRkADnNViqfsIRk9nbbV6+W/z2R5c1Uc+XDxtreT/F/f8A8A3jof8AaXh+wvo5be51AWqb5VUBLgY6e3sf6Vm6NZz3l8PLh2rbNmZpEx5ZH8OP73t26+meB8XXMwv1s5tIi0m4tUETJDI2GUD5TzweP4u4qp4alc+IdOBlcg3MeRvPPIr5bMOGcBj8dTxlRNSjvbRSttf0/HZ6GFLiCdH/AGeMdHpv9+608/8APU3cmin0V9Rc9uwh1C/t1zBfXMR3snySsvygnA4PQUf21rH/AEFr/wD8CH/xoopsSHJqmpyDc+o3bHplpmP9a7D4YSy3enay91I9w0d9tRpWLFR5ERwM9Bkk/iaKKRm9zE+zwf8APGP/AL5FFFFI1P/Z" alt="EIS"><div class="ct-text"><div class="c1">Edugates International School</div><div class="c2">Mental Math Competition</div></div></div><div class="ht" style="font-size:1.2rem;margin-top:12px">Enter Your Name</div><input class="name-input" id="nameInput" placeholder="Your name..." maxlength="30" autocomplete="off"><div style="width:100%;margin-top:6px"><button class="btn bp" onclick="confirmName()">Start →</button></div><div style="width:100%;margin-top:5px"><button class="btn bs" onclick="goHome()">← Back</button></div></div>
+  <div class="screen" id="nameScreen"><div class="ct"><img class="ct-logo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAyACEDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDt9a+Olh4V+I174U8UWt6tlGlu8Wp29zM7IZIldvNiDjIyx5TkD+E13Oo+K2uNL0TVvDt9b6np99dvFJdQXk0se0BcDIk+VsluDzx0ryvU/hVoHjH43XupeLfEEVpp7xWog06Bm+0XhW3TILAYRSQQACWboMcGvTbLxX8G9RtbDwV4d1m2s5LSYta6faWksREkasSrAx9eGJzzwc81x18HVbdeDldRel3Z3Wjt3XRq3zOetWjUpOFOSvda3Wlmrr/MPG+seLNN0+41PSQs1lAn7/Ms5eHIOG/1nK8de30rw39m74ieP9e8cPpmp+INV1qGZIwY7i4kby13/O67SMELnk5Fe3aj4tudNjuE0ubTb6G6iKspRiw4PB6Ag5ryP9mnw/r3gHxlJNcrYypqtpFbSEZYwkyZZO3OO44OPauDhuvi3llH6+r1Une6s93a+i1St/WpyYrFYf6xVVKq7Nxt1t35ddn+H4Hs39s6t/0Frz/v8aKobRRXsnqHB/EhgPFkoJAJt7fHP/TJa1PAegf2p4/0Xxlq+m39peaY7SSar9nYRXcflMu2cnGXAI2yDJONrA8EaXxHTVpZDp2l6zP4S1WGCMNdQ28UhkOwfLKwUyLjoGjbgfwmuN+DXw9+JC/FnS/E/jHUpp7GwmeSK5ub97r7ZmJwPJ5PGGySQuMYxnivS+t0lQ96SjZW189Evm9D5TC4F/Xp1KdS7cndJefX072+Z13i25s73Xbi70+xeztZG+VWUjce7Y7Z64qHw1/yMWnf9fMf/oQrrfivp+sa94Y/4SPw1ewXl+kKywaVeuI1KEZKrggh/c9fyrxf4L+I/G/i3x9aWX/CN2Vja2cyy31xOZE8pFPKru+85xgAfyrx+V3M5ZfVdbnVmr36L8D12ik3D0NFbH1532l+HNN1W/XxNqVsst1dIjiBm3RREKBxwN3TqR+FRaj4rjk8Y2Ph7TmjIEjC6lwCFIRiEH0IGT+HrXzp4g8dfEXQvjjqOh+DlvdXgube136SoZ0ObePcykcwn/bBA7nNe4eEPBd7p5tNXubN49QkUkWs0yyJaMVORI6f6zqRkADnNViqfsIRk9nbbV6+W/z2R5c1Uc+XDxtreT/F/f8A8A3jof8AaXh+wvo5be51AWqb5VUBLgY6e3sf6Vm6NZz3l8PLh2rbNmZpEx5ZH8OP73t26+meB8XXMwv1s5tIi0m4tUETJDI2GUD5TzweP4u4qp4alc+IdOBlcg3MeRvPPIr5bMOGcBj8dTxlRNSjvbRSttf0/HZ6GFLiCdH/AGeMdHpv9+608/8APU3cmin0V9Rc9uwh1C/t1zBfXMR3snySsvygnA4PQUf21rH/AEFr/wD8CH/xoopsSHJqmpyDc+o3bHplpmP9a7D4YSy3enay91I9w0d9tRpWLFR5ERwM9Bkk/iaKKRm9zE+zwf8APGP/AL5FFFFI1P/Z" alt="EIS"><div class="ct-text"><div class="c1">Edugates International School</div><div class="c2">Mental Math Competition</div></div></div><div class="ht" style="font-size:1.2rem;margin-top:12px">Enter Your Name</div><input class="name-input" id="nameInput" placeholder="Your name..." maxlength="30" autocomplete="off"><input class="name-input" id="groupInput" placeholder="Class/Group (optional)" maxlength="20" autocomplete="off" style="font-size:1rem;margin-top:4px"><div style="width:100%;margin-top:6px"><button class="btn bp" onclick="confirmName()">Start →</button></div><div style="width:100%;margin-top:5px"><button class="btn bs" onclick="goHome()">← Back</button></div></div>
   <div class="screen" id="practiceScreen"><div class="ct"><img class="ct-logo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAyACEDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDt9a+Olh4V+I174U8UWt6tlGlu8Wp29zM7IZIldvNiDjIyx5TkD+E13Oo+K2uNL0TVvDt9b6np99dvFJdQXk0se0BcDIk+VsluDzx0ryvU/hVoHjH43XupeLfEEVpp7xWog06Bm+0XhW3TILAYRSQQACWboMcGvTbLxX8G9RtbDwV4d1m2s5LSYta6faWksREkasSrAx9eGJzzwc81x18HVbdeDldRel3Z3Wjt3XRq3zOetWjUpOFOSvda3Wlmrr/MPG+seLNN0+41PSQs1lAn7/Ms5eHIOG/1nK8de30rw39m74ieP9e8cPpmp+INV1qGZIwY7i4kby13/O67SMELnk5Fe3aj4tudNjuE0ubTb6G6iKspRiw4PB6Ag5ryP9mnw/r3gHxlJNcrYypqtpFbSEZYwkyZZO3OO44OPauDhuvi3llH6+r1Une6s93a+i1St/WpyYrFYf6xVVKq7Nxt1t35ddn+H4Hs39s6t/0Frz/v8aKobRRXsnqHB/EhgPFkoJAJt7fHP/TJa1PAegf2p4/0Xxlq+m39peaY7SSar9nYRXcflMu2cnGXAI2yDJONrA8EaXxHTVpZDp2l6zP4S1WGCMNdQ28UhkOwfLKwUyLjoGjbgfwmuN+DXw9+JC/FnS/E/jHUpp7GwmeSK5ub97r7ZmJwPJ5PGGySQuMYxnivS+t0lQ96SjZW189Evm9D5TC4F/Xp1KdS7cndJefX072+Z13i25s73Xbi70+xeztZG+VWUjce7Y7Z64qHw1/yMWnf9fMf/oQrrfivp+sa94Y/4SPw1ewXl+kKywaVeuI1KEZKrggh/c9fyrxf4L+I/G/i3x9aWX/CN2Vja2cyy31xOZE8pFPKru+85xgAfyrx+V3M5ZfVdbnVmr36L8D12ik3D0NFbH1532l+HNN1W/XxNqVsst1dIjiBm3RREKBxwN3TqR+FRaj4rjk8Y2Ph7TmjIEjC6lwCFIRiEH0IGT+HrXzp4g8dfEXQvjjqOh+DlvdXgube136SoZ0ObePcykcwn/bBA7nNe4eEPBd7p5tNXubN49QkUkWs0yyJaMVORI6f6zqRkADnNViqfsIRk9nbbV6+W/z2R5c1Uc+XDxtreT/F/f8A8A3jof8AaXh+wvo5be51AWqb5VUBLgY6e3sf6Vm6NZz3l8PLh2rbNmZpEx5ZH8OP73t26+meB8XXMwv1s5tIi0m4tUETJDI2GUD5TzweP4u4qp4alc+IdOBlcg3MeRvPPIr5bMOGcBj8dTxlRNSjvbRSttf0/HZ6GFLiCdH/AGeMdHpv9+608/8APU3cmin0V9Rc9uwh1C/t1zBfXMR3snySsvygnA4PQUf21rH/AEFr/wD8CH/xoopsSHJqmpyDc+o3bHplpmP9a7D4YSy3enay91I9w0d9tRpWLFR5ERwM9Bkk/iaKKRm9zE+zwf8APGP/AL5FFFFI1P/Z" alt="EIS"><div class="ct-text"><div class="c1">Edugates International School</div><div class="c2">Mental Math Competition</div></div></div><div style="font-family:Fredoka;font-size:1rem;font-weight:600;margin:2px 0;flex-shrink:0">Choose a Category</div><div class="catscroll"><div class="bg2" id="catList"></div></div><div style="width:100%;flex-shrink:0;margin-top:4px"><button class="btn bs" onclick="goHome()">🏠 Home</button></div></div>
   <div class="screen" id="gameScreen"><div class="ct"><img class="ct-logo" src="data:image/jpeg;base64,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" alt="EIS"><div class="ct-text"><div class="c1">Edugates International School</div><div class="c2">Mental Math Competition</div></div></div>
     <div class="gh"><div><div class="gc2" id="ghC">🧮 Calc</div><div class="gr" id="ghR">Q:0|0</div></div>
@@ -161,9 +162,22 @@ var CATS=[{id:'calculate',name:'Calculate',icon:'🧮',desc:'Math'},{id:'memoriz
 var CAT_TIME=45;
 var RANKS=[{min:0,n:'Amoeba',i:'🦠'},{min:200,n:'Goldfish',i:'🐠'},{min:400,n:'Rabbit',i:'🐰'},{min:650,n:'Dolphin',i:'🐬'},{min:900,n:'Owl',i:'🦉'},{min:1200,n:'Elephant',i:'🐘'},{min:1600,n:'Einstein',i:'😼'},{min:2000,n:'Galaxy Brain',i:'🌌'}];
 var OBJ=[{e:'🔴'},{e:'🟦'},{e:'🟢'},{e:'🔶'},{e:'🟣'},{e:'⭐'},{e:'🔺'},{e:'💎'},{e:'🟡'},{e:'🧊'},{e:'🪨'},{e:'🏀'},{e:'🍎'},{e:'🎾'},{e:'🧱'}];
-var S={m:'full',ci:0,qn:0,sc:0,cs:{},tm:0,ti:null,ap:false,name:'',st:0,best:parseInt(localStorage.getItem('e8b')||'0'),cb:JSON.parse(localStorage.getItem('e8c')||'{}'),all:JSON.parse(localStorage.getItem('e8a')||'[]')};
+var S={m:'full',ci:0,qn:0,sc:0,cs:{},tm:0,ti:null,ap:false,name:'',st:0,best:parseInt(localStorage.getItem('e8b')||'0'),cb:JSON.parse(localStorage.getItem('e8c')||'{}'),all:JSON.parse(localStorage.getItem('e8a')||'[]'),
+  // Tracking additions
+  correct:0,wrong:0,streak:0,maxStreak:0,wrongs:[],rxTimes:[],totalTime:0,catStartTime:0,catStats:{},seed:'',group:'',isPaused:false,tabHidden:false,timerPausedAt:0,remainingTm:0,
+  // Preferences
+  bigText:localStorage.getItem('e8bt')==='1',cbMode:localStorage.getItem('e8cb')==='1'};
 var sndOn=true,musicOk=false,vol=0.7;
 var gameLoop,homeLoop,cdLoop,gamePlaying=false,homePlaying=false;
+var streak=0,lastClickTime=0; // #14 streak bonus, #25 double-tap prevention
+var pausedForHidden=false; // #10 tab switch pause
+var compSeed=null; // #1 competition seed
+// Seeded PRNG (Mulberry32) for reproducible competition questions
+function makeSeededRng(seed){var s=seed>>>0;return function(){s=s+0x6D2B79F5|0;var t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+var seedRand=null;
+function hashCode(str){var h=0;for(var i=0;i<str.length;i++){h=((h<<5)-h+str.charCodeAt(i))|0}return h}
+// #26 localStorage cap
+function saveScores(){if(S.all.length>100)S.all=S.all.slice(-100);localStorage.setItem('e8a',JSON.stringify(S.all))}
 
 // ===== MUSIC: 3 separate tracks =====
 var sfxOk,sfxNo,sfxCdBeat,sfxCdGo;
@@ -251,21 +265,29 @@ function playGo(){if(!sndOn||!sfxCdGo)return;try{sfxCdGo.triggerAttackRelease('C
 
 // ===== NAV =====
 function show(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});document.getElementById(id).classList.add('active')}
-function goHome(){clearInterval(S.ti);S.ap=false;updR();show('homeScreen');if(musicOk)startHomeMusic()}
+function goHome(){
+  // #11 confirm leave if in middle of category
+  if(S.ap&&S.qn>0&&S.m!=='practice'){if(!confirm('Leave this category? Your progress will be lost.'))return}
+  clearInterval(S.ti);S.ap=false;streak=0;updR();show('homeScreen');if(musicOk)startHomeMusic()}
 function updR(){var r=gR(S.best);document.getElementById('hRI').textContent=r.i;document.getElementById('hRN').textContent=r.n;document.getElementById('hRS').textContent=S.best>0?'Best: '+S.best:'Play to get ranked!'}
 function gR(s){var r=RANKS[0];for(var i=0;i<RANKS.length;i++)if(s>=RANKS[i].min)r=RANKS[i];return r}
-function ri(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function ri(a,b){var r=seedRand?seedRand():Math.random();return Math.floor(r*(b-a+1))+a}
 function shuf(a){var r=a.slice();for(var i=r.length-1;i>0;i--){var j=ri(0,i);var t=r[i];r[i]=r[j];r[j]=t}return r}
 function genO(ans,n){var o=[ans],sf=0;while(o.length<n&&sf<80){sf++;var off=ri(1,Math.max(3,Math.abs(Math.floor(ans*.35))));var c=ans+(Math.random()>.5?off:-off);if(c>0&&o.indexOf(c)===-1)o.push(c)}return shuf(o)}
 function showFly(t,ok){var d=document.createElement('div');d.className='fly '+(ok?'fly-ok':'fly-no');d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},700)}
 function showRx(ok){var d=document.createElement('div');d.className='react-emoji';d.textContent=ok?['🎉','✅','🔥','💪','⭐'][ri(0,4)]:['❌','😬','💥','😵'][ri(0,3)];document.body.appendChild(d);setTimeout(function(){d.remove()},800)}
-function askName(){show('nameScreen');var inp=document.getElementById('nameInput');inp.value=S.name||'';setTimeout(function(){inp.focus()},150);inp.onkeydown=function(e){if(e.key==='Enter')confirmName()}}
-function confirmName(){var n=document.getElementById('nameInput').value.trim();if(!n){document.getElementById('nameInput').style.borderColor='#ff5050';return}S.name=n;initMusic();startFull()}
-function startFull(){S.m='full';S.ci=0;S.cs={};startC(0)}
-function showPractice(){var l=document.getElementById('catList');l.innerHTML='';CATS.forEach(function(c,i){var b=S.cb[c.id]||0;l.innerHTML+='<button class="btn bcat" onclick="startPr('+i+')"><div class="ci">'+c.icon+'</div><div><div class="cn">'+c.name+'</div><div class="cd">'+c.desc+'</div>'+(b?'<div class="cb">Best:'+b+'</div>':'')+'</div></button>'});show('practiceScreen')}
-function startPr(i){S.m='practice';S.ci=i;S.cs={};S.name=S.name||'Practice';initMusic();startC(i)}
+function askName(){compSeed=null;seedRand=null;show('nameScreen');var inp=document.getElementById('nameInput');inp.value=S.name||'';setTimeout(function(){inp.focus()},150);inp.onkeydown=function(e){if(e.key==='Enter')confirmName()}}
+function askCompCode(){var code=prompt('Enter Competition Code\n(all players must use the same code):','EIS2026');if(!code)return;compSeed=hashCode(code.trim().toUpperCase());askName()}
+function confirmName(){var n=document.getElementById('nameInput').value.trim();if(!n){document.getElementById('nameInput').style.borderColor='#ff5050';return}S.name=n;var g=document.getElementById('groupInput');S.group=g?g.value.trim():'';if(compSeed)seedRand=makeSeededRng(compSeed);initMusic();startFull()}
+function startFull(){S.m=compSeed?'comp':'full';S.ci=0;S.cs={};streak=0;S.wrongs=[];S.catStats={};startC(0)}
+function showPractice(){compSeed=null;seedRand=null;var l=document.getElementById('catList');l.innerHTML='';CATS.forEach(function(c,i){var b=S.cb[c.id]||0;l.innerHTML+='<button class="btn bcat" onclick="startPr('+i+')"><div class="ci">'+c.icon+'</div><div><div class="cn">'+c.name+'</div><div class="cd">'+c.desc+'</div>'+(b?'<div class="cb">Best:'+b+'</div>':'')+'</div></button>'});show('practiceScreen')}
+function startPr(i){S.m='practice';S.ci=i;S.cs={};S.name=S.name||'Practice';streak=0;initMusic();startC(i)}
 function startC(i){showCD(i,function(){beginC(i)})}
-function beginC(i){S.qn=0;S.sc=0;S.st=Date.now();document.getElementById('ghC').innerHTML=CATS[i].icon+' '+CATS[i].name;show('gameScreen');startGameMusic();nxt()}
+function beginC(i){S.qn=0;S.sc=0;S.st=Date.now();S.correct=0;S.wrong=0;S.catStartTime=Date.now();
+  // #15 progress indicator: show "Cat X of 7" for full mode
+  var catLabel=CATS[i].icon+' '+CATS[i].name;
+  if(S.m==='full'||S.m==='comp')catLabel+=' <span style="opacity:.5;font-size:.75rem">('+(i+1)+'/'+CATS.length+')</span>';
+  document.getElementById('ghC').innerHTML=catLabel;show('gameScreen');startGameMusic();nxt()}
 function showCD(ci,cb){var cat=CATS[ci];var ov=document.createElement('div');ov.className='countdown-overlay';
   ov.innerHTML='<div class="countdown-cat-icon">'+cat.icon+'</div><div class="countdown-cat">'+cat.name+'</div><div class="countdown-num cd-3">3</div>';
   document.body.appendChild(ov);var n=ov.querySelector('.countdown-num');
@@ -274,36 +296,139 @@ function showCD(ci,cb){var cat=CATS[ci];var ov=document.createElement('div');ov.
   setTimeout(function(){n.className='countdown-num cd-1';n.textContent='1';n.style.animation='none';n.offsetHeight;n.style.animation='cdP .4s ease';playCd(1)},2000);
   setTimeout(function(){n.className='countdown-go';n.textContent='GO!';n.style.animation='none';n.offsetHeight;n.style.animation='cdP .3s ease';playGo()},3000);
   setTimeout(function(){ov.remove();cb()},3350)}
-function stTm(){clearInterval(S.ti);S.tm=CAT_TIME;uTm();S.ti=setInterval(function(){S.tm--;uTm();document.getElementById('pF').style.width=(S.tm/CAT_TIME*100)+'%';if(S.tm<=0){clearInterval(S.ti);S.ap=false;setTimeout(endC,400)}},1000)}
+function stTm(){clearInterval(S.ti);S.tm=CAT_TIME;uTm();S.ti=setInterval(function(){if(pausedForHidden)return;S.tm--;uTm();document.getElementById('pF').style.width=(S.tm/CAT_TIME*100)+'%';if(S.tm<=0){clearInterval(S.ti);S.ap=false;setTimeout(endC,400)}},1000)}
 function uTm(){var e=document.getElementById('ghT');e.textContent=S.tm;e.className='gt'+(S.tm<=5?' warn':'')}
 function nxt(){S.ap=true;S.qn++;S.st=Date.now();document.getElementById('ghR').textContent='Q:'+S.qn+'|'+S.sc;
   var d=Math.min(Math.ceil(S.qn/2),5);var c=CATS[S.ci];if(S.qn===1)stTm();
   switch(c.id){case'calculate':gCalc(d);break;case'memorize':gMem(d);break;case'analyze':gAna(d);break;case'visualize':gVis(d);break;case'weigh':gWeigh(d);break;case'countup':gCU(d);break;case'react':gReact(d);break}}
 function aw(b){var el=(Date.now()-S.st)/1000;var m=el<2?3:el<4?2:el<7?1.5:1;var p=Math.round(b*m);S.sc+=p;document.getElementById('ghR').textContent='Q:'+S.qn+'|'+S.sc;return p}
-function endC(){clearInterval(S.ti);var c=CATS[S.ci];S.cs[c.id]=S.sc;if(!S.cb[c.id]||S.sc>S.cb[c.id]){S.cb[c.id]=S.sc;localStorage.setItem('e8c',JSON.stringify(S.cb))}
-  document.getElementById('catResCard').innerHTML='<div style="font-size:1.8rem">'+c.icon+'</div><div style="font-family:Fredoka;font-size:1rem;font-weight:600;margin:2px 0">'+c.name+' — Time Up!</div><div class="sr2">'+(['💫','⭐','⭐⭐','⭐⭐⭐'])[Math.min(3,Math.floor(S.sc/40))]+'</div><div class="sb">'+S.sc+'</div><div class="sl">pts</div><div class="sbd"><div class="srow"><span class="srl">Qs</span><span class="srv">'+S.qn+'</span></div><div class="srow"><span class="srl">Best</span><span class="srv">'+S.cb[c.id]+'</span></div></div>';
-  var nb=document.getElementById('catResNext');if(S.m==='full'&&S.ci<CATS.length-1){nb.textContent='Next →';nb.onclick=function(){S.ci++;startC(S.ci)}}else if(S.m==='full'){nb.textContent='Results 🏆';nb.onclick=showF}else{nb.textContent='🏠';nb.onclick=goHome}show('catResScreen')}
+function endC(){clearInterval(S.ti);var c=CATS[S.ci];S.cs[c.id]=S.sc;
+  // Save per-category stats for tie-breaking and analysis (#2, #3, #16)
+  var avgRx=S.rxTimes.length?(S.rxTimes.reduce(function(a,b){return a+b},0)/S.rxTimes.length):0;
+  S.catStats[c.id]={correct:S.correct,wrong:S.wrong,questions:S.qn,maxStreak:S.maxStreak,avgRx:avgRx,totalTime:(Date.now()-S.catStartTime)/1000};
+  S.rxTimes=[];S.maxStreak=0;
+  if(!S.cb[c.id]||S.sc>S.cb[c.id]){S.cb[c.id]=S.sc;localStorage.setItem('e8c',JSON.stringify(S.cb))}
+  var acc=S.qn>0?Math.round((S.correct/S.qn)*100):0;
+  document.getElementById('catResCard').innerHTML='<div style="font-size:1.8rem">'+c.icon+'</div><div style="font-family:Fredoka;font-size:1rem;font-weight:600;margin:2px 0">'+c.name+' — Time Up!</div><div class="sr2">'+(['💫','⭐','⭐⭐','⭐⭐⭐'])[Math.min(3,Math.floor(S.sc/40))]+'</div><div class="sb">'+S.sc+'</div><div class="sl">pts</div><div class="sbd"><div class="srow"><span class="srl">Answered</span><span class="srv">'+S.qn+'</span></div><div class="srow"><span class="srl">✅ Correct</span><span class="srv" style="color:var(--green)">'+S.correct+'</span></div><div class="srow"><span class="srl">❌ Wrong</span><span class="srv" style="color:#ff6b6b">'+S.wrong+'</span></div><div class="srow"><span class="srl">Accuracy</span><span class="srv">'+acc+'%</span></div><div class="srow"><span class="srl">Best Streak</span><span class="srv">🔥 '+S.catStats[c.id].maxStreak+'</span></div><div class="srow"><span class="srl">Avg Time</span><span class="srv">'+avgRx.toFixed(1)+'s</span></div><div class="srow"><span class="srl">Best Score</span><span class="srv">'+S.cb[c.id]+'</span></div></div>';
+  var nb=document.getElementById('catResNext');if((S.m==='full'||S.m==='comp')&&S.ci<CATS.length-1){nb.textContent='Next →';nb.onclick=function(){S.ci++;startC(S.ci)}}else if(S.m==='full'||S.m==='comp'){nb.textContent='Results 🏆';nb.onclick=showF}else{nb.textContent='🏠';nb.onclick=goHome}show('catResScreen')}
 function showF(){var tot=0;for(var k in S.cs)tot+=S.cs[k];if(tot>S.best){S.best=tot;localStorage.setItem('e8b',tot)}
-  S.all.push({name:S.name,total:tot,cats:JSON.parse(JSON.stringify(S.cs)),date:new Date().toISOString().slice(0,16)});localStorage.setItem('e8a',JSON.stringify(S.all));
+  // Build summary stats
+  var totCorrect=0,totWrong=0,totQs=0,maxS=0;
+  for(var k in S.catStats){totCorrect+=S.catStats[k].correct||0;totWrong+=S.catStats[k].wrong||0;totQs+=S.catStats[k].questions||0;if(S.catStats[k].maxStreak>maxS)maxS=S.catStats[k].maxStreak}
+  var totAcc=totQs>0?Math.round((totCorrect/totQs)*100):0;
+  var avgTimeAll=0,rxCount=0;for(var k in S.catStats){if(S.catStats[k].avgRx){avgTimeAll+=S.catStats[k].avgRx;rxCount++}}
+  avgTimeAll=rxCount?avgTimeAll/rxCount:0;
+  S.all.push({name:S.name,total:tot,cats:JSON.parse(JSON.stringify(S.cs)),stats:JSON.parse(JSON.stringify(S.catStats)),correct:totCorrect,wrong:totWrong,questions:totQs,accuracy:totAcc,maxStreak:maxS,avgTime:avgTimeAll,mode:S.m,group:S.group||'',date:new Date().toISOString().slice(0,16)});
+  saveScores();
   try{window.storage&&window.storage.set('sc8',JSON.stringify(S.all))}catch(e){}
   var rk=gR(tot);var ch='';CATS.forEach(function(c){var s=S.cs[c.id]||0;ch+='<div class="csr"><div class="ci3">'+c.icon+'</div><div class="cn3">'+c.name+'</div><div class="cb3"><div class="cbf" style="width:'+Math.min(s/60*100,100)+'%"></div></div><div class="cs3">'+s+'</div></div>'});
-  document.getElementById('finalCard').innerHTML='<div style="font-size:.65rem;text-transform:uppercase;letter-spacing:1px;opacity:.4">'+S.name+'</div><div class="fri">'+rk.i+'</div><div class="frn">'+rk.n+'</div><div class="frt">'+tot+' pts</div><div class="cscs">'+ch+'</div>';updR();show('finalScreen')}
-function showLB(){var lb=document.getElementById('lbContent');var so=S.all.slice().sort(function(a,b){return b.total-a.total});
-  var h='<div class="lb-title">All Time</div>';if(!so.length)h+='<div style="opacity:.3;text-align:center;margin:10px 0;font-size:.8rem">No scores yet</div>';
-  else so.slice(0,20).forEach(function(s,i){h+='<div class="lb-row"><span class="lbn">'+(i+1)+'. '+s.name+'</span><span class="lbs">'+s.total+'</span></div>'});
+  var reviewBtn=S.wrongs.length>0?'<button class="btn bs" style="margin-top:6px" onclick="showReview()">📖 Review '+S.wrongs.length+' Wrong Answers</button>':'';
+  document.getElementById('finalCard').innerHTML='<div style="font-size:.65rem;text-transform:uppercase;letter-spacing:1px;opacity:.4">'+S.name+'</div><div class="fri">'+rk.i+'</div><div class="frn">'+rk.n+'</div><div class="frt">'+tot+' pts</div><div style="font-size:.8rem;opacity:.7;margin:4px 0">'+totCorrect+'/'+totQs+' correct ('+totAcc+'%) • 🔥 '+maxS+' streak • ⏱ '+avgTimeAll.toFixed(1)+'s avg</div><div class="cscs">'+ch+'</div>'+reviewBtn;updR();show('finalScreen')}
+function showReview(){var h='<div style="font-family:Fredoka;font-size:1rem;font-weight:600;margin:4px 0;color:var(--yellow)">📖 Review Wrong Answers</div>';
+  S.wrongs.forEach(function(w,i){var cat=CATS.filter(function(c){return c.id===w.cat})[0];
+    h+='<div style="background:rgba(255,255,255,.05);border-radius:8px;padding:6px 10px;margin:4px 0;font-size:.8rem"><div style="opacity:.6;font-size:.7rem">'+(cat?cat.icon+' '+cat.name:w.cat)+'</div><div style="margin:3px 0">'+w.q+'</div><div style="color:#ff6b6b">You: '+w.picked+'</div><div style="color:var(--green)">Correct: '+w.correct+'</div></div>'});
+  h+='<button class="btn bs" style="margin-top:6px" onclick="show(\'finalScreen\')">← Back</button>';
+  document.getElementById('lbContent').innerHTML=h;show('lbScreen')}
+function showLB(){var lb=document.getElementById('lbContent');var so=S.all.slice().sort(function(a,b){return b.total-a.total||(a.avgTime||99)-(b.avgTime||99)});
+  // #17 Gather unique groups for filter
+  var groups={};so.forEach(function(s){if(s.group)groups[s.group]=true});
+  var gKeys=Object.keys(groups);
+  var filterHtml='';
+  if(gKeys.length>0){
+    filterHtml='<div style="display:flex;gap:4px;flex-wrap:wrap;margin:4px 0"><button class="btn bs" style="padding:4px 8px;font-size:.7rem;width:auto;flex:0 0 auto" onclick="filterLB(\'\')">All</button>';
+    gKeys.forEach(function(g){filterHtml+='<button class="btn bs" style="padding:4px 8px;font-size:.7rem;width:auto;flex:0 0 auto" onclick="filterLB(\''+g.replace(/'/g,"\\'")+'\')">'+g+'</button>'});
+    filterHtml+='</div>';
+  }
+  var h=filterHtml+'<div class="lb-title">All Time (Top 20)</div>';
+  if(!so.length)h+='<div style="opacity:.3;text-align:center;margin:10px 0;font-size:.8rem">No scores yet</div>';
+  else so.slice(0,20).forEach(function(s,i){
+    var meta=(s.accuracy!==undefined?' • '+s.accuracy+'%':'')+(s.maxStreak?' • 🔥'+s.maxStreak:'')+(s.group?' • '+s.group:'');
+    h+='<div class="lb-row"><span class="lbn">'+(i+1)+'. '+s.name+'<span style="font-size:.6rem;opacity:.5">'+meta+'</span></span><span class="lbs">'+s.total+'</span></div>'});
   h+='<div class="lb-title">Category Bests</div>';CATS.forEach(function(c){h+='<div class="lb-row"><span class="lbn">'+c.icon+' '+c.name+'</span><span class="lbs">'+(S.cb[c.id]||0)+'</span></div>'});
   lb.innerHTML=h;show('lbScreen')}
-function exportCSV(){var csv='Name,Total,Date,'+CATS.map(function(c){return c.name}).join(',')+'\n';S.all.forEach(function(s){csv+='"'+s.name+'",'+s.total+','+s.date;CATS.forEach(function(c){csv+=','+(s.cats[c.id]||0)});csv+='\n'});var b=new Blob([csv],{type:'text/csv'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='EIS_Scores.csv';a.click()}
+function filterLB(group){
+  var lb=document.getElementById('lbContent');
+  var filtered=S.all.filter(function(s){return !group||s.group===group}).sort(function(a,b){return b.total-a.total||(a.avgTime||99)-(b.avgTime||99)});
+  var h='<button class="btn bs" style="padding:4px 8px;font-size:.7rem;width:auto;margin-bottom:5px" onclick="showLB()">← All</button><div class="lb-title">'+(group||'All')+' (Top 20)</div>';
+  if(!filtered.length)h+='<div style="opacity:.3;text-align:center;margin:10px 0;font-size:.8rem">No scores</div>';
+  else filtered.slice(0,20).forEach(function(s,i){
+    var meta=(s.accuracy!==undefined?' • '+s.accuracy+'%':'')+(s.maxStreak?' • 🔥'+s.maxStreak:'');
+    h+='<div class="lb-row"><span class="lbn">'+(i+1)+'. '+s.name+'<span style="font-size:.6rem;opacity:.5">'+meta+'</span></span><span class="lbs">'+s.total+'</span></div>'});
+  lb.innerHTML=h;
+}
+function exportCSV(){
+  // #18 Tab-separated for easy paste into Google Sheets + detailed stats
+  var headers=['Rank','Name','Group','Total','Correct','Wrong','Questions','Accuracy%','MaxStreak','AvgTime(s)','Mode','Date'];
+  CATS.forEach(function(c){headers.push(c.name)});
+  var csv=headers.join(',')+'\n';
+  var sorted=S.all.slice().sort(function(a,b){return b.total-a.total||(a.avgTime||99)-(b.avgTime||99)});
+  sorted.forEach(function(s,i){
+    var row=[i+1,'"'+s.name+'"','"'+(s.group||'')+'"',s.total,s.correct||0,s.wrong||0,s.questions||0,(s.accuracy!==undefined?s.accuracy:''),s.maxStreak||0,(s.avgTime||0).toFixed(2),s.mode||'full',s.date];
+    CATS.forEach(function(c){row.push(s.cats[c.id]||0)});
+    csv+=row.join(',')+'\n';
+  });
+  var b=new Blob([csv],{type:'text/csv'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='EIS_Scores_'+new Date().toISOString().slice(0,10)+'.csv';a.click()
+}
 
-// ===== ANSWERS (colored MCQ buttons) =====
-function chk(btn,sel,cor){if(!S.ap)return;S.ap=false;var bs=btn.parentNode.querySelectorAll('.ob');
-  if(sel===cor){btn.classList.add('correct');var p=aw(20);showFly('+'+p,true);showRx(true);playOk()}
-  else{btn.classList.add('wrong');showFly('✗',false);showRx(false);playNo();bs.forEach(function(b){if(parseInt(b.textContent)===cor)b.classList.add('correct')})}
+// Track correct/wrong for non-MCQ categories (memorize, visualize, countup)
+function trackAnswer(correct){
+  S.rxTimes.push((Date.now()-S.st)/1000);
+  if(correct){S.correct++;streak++;if(streak>S.maxStreak)S.maxStreak=streak;
+    var bonus=0;if(streak===3)bonus=5;else if(streak===5)bonus=15;else if(streak===10)bonus=30;else if(streak>10&&streak%5===0)bonus=20;
+    if(bonus>0){S.sc+=bonus;setTimeout(function(){showFly('🔥+'+bonus+' STREAK!',true)},300)}}
+  else{S.wrong++;streak=0}
+  flashCard(correct);
+}
+// ===== ANSWERS (with streak bonus, correct/wrong tracking, wrong-answer capture) =====
+function handleAnswer(correct,btn,cor,questionText){
+  // #3/#14 tracking
+  var rxTime=(Date.now()-S.st)/1000;
+  S.rxTimes.push(rxTime);
+  if(correct){
+    S.correct++;
+    streak++;
+    if(streak>S.maxStreak)S.maxStreak=streak;
+    var base=20;var p=aw(base);
+    // Streak bonuses: 3 = +5, 5 = +15, 10 = +30
+    var bonus=0;
+    if(streak===3)bonus=5;else if(streak===5)bonus=15;else if(streak===10)bonus=30;
+    else if(streak>10&&streak%5===0)bonus=20;
+    if(bonus>0){S.sc+=bonus;setTimeout(function(){showFly('🔥+'+bonus+' STREAK!',true)},300)}
+    showFly('+'+p,true);showRx(true);playOk();
+  } else {
+    S.wrong++;streak=0;
+    // Capture wrong answer for review (max 10 stored)
+    if(S.wrongs.length<10&&questionText){
+      S.wrongs.push({cat:CATS[S.ci].id,q:questionText,correct:String(cor),picked:btn?btn.textContent:'timeout'})}
+    showFly('✗',false);showRx(false);playNo();
+  }
+}
+function chk(btn,sel,cor){if(!S.ap)return;
+  // #25 double-tap prevention
+  var now=Date.now();if(now-lastClickTime<250)return;lastClickTime=now;
+  S.ap=false;var bs=btn.parentNode.querySelectorAll('.ob');
+  var correct=(sel===cor);
+  if(correct){btn.classList.add('correct')}
+  else{btn.classList.add('wrong');bs.forEach(function(b){if(parseInt(b.textContent)===cor)b.classList.add('correct')})}
+  var qText=btn.parentNode.parentNode.querySelector('.cd2');qText=qText?qText.textContent:'';
+  handleAnswer(correct,btn,cor,qText);
+  flashCard(correct);
   bs.forEach(function(b){b.classList.add('disabled')});setTimeout(nxt,500)}
-function chkS(btn,sel,cor){if(!S.ap)return;S.ap=false;var bs=btn.parentNode.querySelectorAll('.ob');
-  if(sel===cor){btn.classList.add('correct');var p=aw(20);showFly('+'+p,true);showRx(true);playOk()}
-  else{btn.classList.add('wrong');showFly('✗',false);showRx(false);playNo();bs.forEach(function(b){if(b.getAttribute('dv')===cor)b.classList.add('correct')})}
+function chkS(btn,sel,cor){if(!S.ap)return;
+  var now=Date.now();if(now-lastClickTime<250)return;lastClickTime=now;
+  S.ap=false;var bs=btn.parentNode.querySelectorAll('.ob');
+  var correct=(sel===cor);
+  if(correct){btn.classList.add('correct')}
+  else{btn.classList.add('wrong');bs.forEach(function(b){if(b.getAttribute('dv')===cor)b.classList.add('correct')})}
+  var qText=btn.parentNode.parentNode.querySelector('.cd2');qText=qText?qText.textContent:'';
+  handleAnswer(correct,btn,cor,qText);
+  flashCard(correct);
   bs.forEach(function(b){b.classList.add('disabled')});setTimeout(nxt,500)}
+// #20 screen flash on correct/wrong
+function flashCard(ok){var card=document.getElementById('gCard');if(!card)return;
+  card.style.transition='box-shadow .3s';
+  card.style.boxShadow=ok?'inset 0 0 0 3px rgba(91,200,160,.7),0 0 25px rgba(91,200,160,.4)':'inset 0 0 0 3px rgba(255,80,80,.7),0 0 25px rgba(255,80,80,.4)';
+  setTimeout(function(){card.style.boxShadow=''},350)}
 // MCQ with colored buttons
 function mkO(opts,cor){return'<div class="og">'+opts.map(function(o,i){return'<button class="ob ob-'+i+'" onclick="chk(this,'+o+','+cor+')">'+o+'</button>'}).join('')+'</div>'}
 
@@ -340,7 +465,13 @@ function nD(){if(!S.ap||memI<=0)return;memI--;var b=document.getElementById('mb'
 function hlM(){for(var i=0;i<memS.length;i++){var b=document.getElementById('mb'+i);if(b)b.style.borderColor=i===memI?'var(--teal)':'rgba(255,255,255,.18)'}}
 function subM(){if(!S.ap)return;S.ap=false;memKB=false;var m=0;
   for(var i=0;i<memS.length;i++){var b=document.getElementById('mb'+i);if(parseInt(b.getAttribute('dv'))===memS[i]){b.style.borderColor='var(--green)';b.style.background='rgba(91,200,160,.2)';m++}else{b.style.borderColor='#ff5050';b.style.background='rgba(255,80,80,.12)'}}
-  if(m===memS.length){var p=aw(25);showFly('+'+p,true);showRx(true);playOk()}else{S.sc+=Math.floor(8*m/memS.length);showFly('✗',false);showRx(false);playNo()}setTimeout(nxt,650)}
+  var allOk=(m===memS.length);
+  trackAnswer(allOk);
+  if(allOk){var p=aw(25);showFly('+'+p,true);showRx(true);playOk()}
+  else{S.sc+=Math.floor(8*m/memS.length);
+    if(S.wrongs.length<10)S.wrongs.push({cat:'memorize',q:memS.join(' '),correct:memS.join(' '),picked:m+'/'+memS.length+' digits'});
+    showFly('✗',false);showRx(false);playNo()}
+  setTimeout(nxt,650)}
 
 // ===== ANALYZE =====
 var anaSeen={};
@@ -513,8 +644,12 @@ function gVis(d){var c=document.getElementById('gCard');legoIn='';legoKB=true;
 function lT(n){if(!S.ap||legoIn.length>=3)return;legoIn+=n;document.getElementById('lD').textContent=legoIn}
 function lDl(){if(!S.ap||!legoIn.length)return;legoIn=legoIn.slice(0,-1);document.getElementById('lD').textContent=legoIn||'_'}
 function lSb(){if(!S.ap||!legoIn.length)return;S.ap=false;legoKB=false;var v=parseInt(legoIn),d=document.getElementById('lD');
-  if(v===legoAns){d.style.color='var(--green)';d.textContent='✓ '+legoAns;var p=aw(20);showFly('+'+p,true);showRx(true);playOk()}
-  else{d.style.color='#ff5050';d.textContent='✗→'+legoAns;showFly('✗',false);showRx(false);playNo()}setTimeout(nxt,550)}
+  var correct=(v===legoAns);trackAnswer(correct);
+  if(correct){d.style.color='var(--green)';d.textContent='✓ '+legoAns;var p=aw(20);showFly('+'+p,true);showRx(true);playOk()}
+  else{d.style.color='#ff5050';d.textContent='✗→'+legoAns;
+    if(S.wrongs.length<10)S.wrongs.push({cat:'visualize',q:'Count cubes',correct:String(legoAns),picked:legoIn});
+    showFly('✗',false);showRx(false);playNo()}
+  setTimeout(nxt,550)}
 
 // ===== WEIGH =====
 function gWeigh(d){var c=document.getElementById('gCard');var p=shuf(OBJ).slice(0,d<=1?3:d<=3?4:5);var hv,clues;
@@ -609,6 +744,17 @@ function gReact(d){var c=document.getElementById('gCard');
 document.addEventListener('keydown',function(e){
   if(memKB&&S.ap){if(e.key>='0'&&e.key<='9'){e.preventDefault();nT(parseInt(e.key));return}if(e.key==='Backspace'){e.preventDefault();nD();return}}
   if(legoKB&&S.ap){if(e.key>='0'&&e.key<='9'){e.preventDefault();lT(parseInt(e.key));return}if(e.key==='Backspace'){e.preventDefault();lDl();return}if(e.key==='Enter'){e.preventDefault();lSb();return}}});
+
+// #10/#24 Tab visibility: pause timer and music when tab hidden
+document.addEventListener('visibilitychange',function(){
+  if(document.hidden){
+    pausedForHidden=true;
+    if(musicOk){try{Tone.Transport.pause()}catch(e){}}
+  } else {
+    pausedForHidden=false;
+    if(musicOk&&sndOn){try{Tone.Transport.start()}catch(e){}}
+  }
+});
 
 // INIT
 (async function(){try{var r=await window.storage.get('sc8');if(r&&r.value){var d=JSON.parse(r.value);if(d.length>S.all.length)S.all=d}}catch(e){}})();
