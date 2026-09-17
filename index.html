@@ -15,24 +15,27 @@
 <div class="bg"></div>
 <div class="gc">
   <div class="screen active" id="homeScreen">
-    <div class="ct" style="flex-shrink:0"><img class="ct-logo" src="assets/eis-logo.jpg" alt="EIS"><div class="ct-text"><div class="c1">Edugates International School</div><div class="c2">Mental Math Competition</div></div></div>
+    <div class="ct" style="flex-shrink:0;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:8px">
+        <img class="ct-logo" src="assets/eis-logo.jpg" alt="EIS">
+        <div class="ct-text">
+          <div class="c1">Edugates International School</div>
+          <div class="c2">Mental Math Competition</div>
+        </div>
+      </div>
+      <button class="hb" id="settingsIconBtn" onclick="openSettings()" title="Settings & Accessibility" style="font-size:1.1rem;flex-shrink:0">⚙️</button>
+    </div>
     <div class="ht" style="flex-shrink:0"><span class="em">🧠</span>Who Has the<br>Biggest Brain?</div>
     <div class="sub" style="flex-shrink:0">45 seconds per category — answer as many as you can!</div>
     <div class="rbox" style="flex-shrink:0"><div class="ri" id="hRI">🐛</div><div class="rn" id="hRN">Newcomer</div><div class="rs" id="hRS">Play to get ranked!</div></div>
     <div class="hpv" style="flex-shrink:0"><div class="hpv-item">🧮</div><div class="hpv-item">🧠</div><div class="hpv-item">🔍</div><div class="hpv-item">🧊</div><div class="hpv-item">⚖️</div><div class="hpv-item">🎯</div><div class="hpv-item">⚡</div></div>
-    <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:4px;flex-shrink:0">
-      <button class="snd-btn" id="homeSndBtn" onclick="toggleSnd()">🔊</button>
-      <input type="range" min="0" max="100" value="50" id="homeVolSlider" oninput="setVol(this.value)" style="width:90px;height:4px;-webkit-appearance:none;background:rgba(255,255,255,.15);border-radius:2px;outline:none">
-      <span style="font-size:.65rem;opacity:.4">Volume</span>
-    </div>
-    <div class="bg2" style="flex-shrink:0;gap:4px">
+    <div class="bg2" style="flex-shrink:0;gap:5px;margin-top:2px">
       <button class="btn bp" onclick="askName()">🚀 Play All Categories</button>
       <button class="btn bs" onclick="askCompCode()">🏆 Competition Mode</button>
-      <button class="btn bs" onclick="showPractice()">🎯 Practice</button>
-      <button class="btn bs" onclick="showLB()">📊 Leaderboard</button>
-      <div style="display:flex;gap:4px;margin-top:1px">
-        <button class="btn bs" id="bigTextBtn" onclick="toggleBigText()" style="flex:1;padding:7px;font-size:.7rem">A+ Text</button>
-        <button class="btn bs" id="ttsBtn" onclick="toggleTTS()" style="flex:1;padding:7px;font-size:.7rem">🔊 Read</button>
+      <button class="btn bs" onclick="showPractice()">🎯 Practice Category</button>
+      <div style="display:flex;gap:5px">
+        <button class="btn bs" onclick="showLB()" style="flex:1">📊 Leaderboard</button>
+        <button class="btn bs" onclick="openSettings()" style="flex:1">⚙️ Settings</button>
       </div>
     </div>
   </div>
@@ -52,6 +55,62 @@
   <div class="screen" id="catResScreen"><div class="ct"><img class="ct-logo" src="assets/eis-logo.jpg" alt="EIS"><div class="ct-text"><div class="c1">Edugates International School</div><div class="c2">Mental Math Competition</div></div></div><div class="rc" id="catResCard"></div><div style="margin-top:5px;width:100%;display:flex;gap:5px;flex-shrink:0"><button class="btn bs" style="flex:0 0 auto;width:auto;padding:11px 13px" onclick="goHome()">🏠</button><button class="btn bp" style="flex:1" id="catResNext">Next →</button></div></div>
   <div class="screen" id="finalScreen"><div class="ct"><img class="ct-logo" src="assets/eis-logo.jpg" alt="EIS"><div class="ct-text"><div class="c1">Edugates International School</div><div class="c2">Mental Math Competition</div></div></div><div class="rc" id="finalCard" style="flex:1;min-height:0;overflow-y:auto"></div><div class="bg2" style="flex-shrink:0;margin-top:4px"><button class="btn bp" onclick="askName()">🔄 Again</button><button class="btn bs" onclick="goHome()">🏠</button></div></div>
   <div class="screen" id="lbScreen"><div class="ct"><img class="ct-logo" src="assets/eis-logo.jpg" alt="EIS"><div class="ct-text"><div class="c1">Edugates International School</div><div class="c2">Mental Math Competition</div></div></div><div style="font-family:Fredoka;font-size:1rem;font-weight:600;margin:3px 0;flex-shrink:0">🏆 Leaderboard</div><div id="lbContent" style="flex:1;width:100%;overflow-y:auto;min-height:0"></div><div class="bg2" style="flex-shrink:0;margin-top:4px"><button class="btn bs" onclick="exportCSV()">📥 CSV</button><button class="btn bs" onclick="goHome()">🏠</button></div></div>
+</div>
+
+<!-- Settings & Accessibility Drawer -->
+<div id="settingsModal" class="settings-modal" onclick="closeSettingsOnBackdrop(event)">
+  <div class="settings-drawer">
+    <div class="settings-header">
+      <div class="settings-title">⚙️ Settings & Options</div>
+      <button class="settings-close" onclick="closeSettings()" aria-label="Close Settings">✕</button>
+    </div>
+
+    <!-- Audio Section -->
+    <div class="settings-section">
+      <div class="settings-sec-title">🎵 Sound & Music</div>
+      <div class="settings-row">
+        <div class="settings-label">
+          <span>Master Sound</span>
+          <small id="settingsSndStatus">Enabled</small>
+        </div>
+        <button class="btn bs settings-toggle-btn" id="settingsSndToggle" onclick="toggleSnd()">🔊 On</button>
+      </div>
+      <div class="settings-row" style="margin-top:8px">
+        <div class="settings-label">
+          <span>Volume</span>
+          <small id="settingsVolPercent">50%</small>
+        </div>
+        <div class="settings-slider-row" style="max-width:140px">
+          <input type="range" min="0" max="100" value="50" id="settingsVolSlider" oninput="setVol(this.value)">
+        </div>
+      </div>
+    </div>
+
+    <!-- Accessibility Section -->
+    <div class="settings-section">
+      <div class="settings-sec-title">♿ Accessibility</div>
+      <div class="settings-row">
+        <div class="settings-label">
+          <span>Big Text Mode</span>
+          <small>Larger fonts for easier reading</small>
+        </div>
+        <button class="btn bs settings-toggle-btn" id="settingsBigTextToggle" onclick="toggleBigText()">Off</button>
+      </div>
+      <div class="settings-row" style="margin-top:8px">
+        <div class="settings-label">
+          <span>Read Aloud (TTS)</span>
+          <small>Spoken questions & instructions</small>
+        </div>
+        <button class="btn bs settings-toggle-btn" id="settingsTtsToggle" onclick="toggleTTS()">Off</button>
+      </div>
+    </div>
+
+    <!-- School & About Section -->
+    <div class="settings-footer-info">
+      <div>🧠 <strong>EIS Mental Math</strong> v2.2</div>
+      <div style="opacity:0.6;font-size:0.75rem;margin-top:2px">Edugates International School</div>
+    </div>
+  </div>
 </div>
 
 <!-- Foundation -->

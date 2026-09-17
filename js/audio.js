@@ -425,6 +425,7 @@ const toggleSnd = function() {
   let icon = sndOn ? '🔊' : '🔇';
   let sb = document.getElementById('sndBtn'); if (sb) sb.textContent = icon;
   let hsb = document.getElementById('homeSndBtn'); if (hsb) hsb.textContent = icon;
+  if (typeof updateSettingsUi === 'function') updateSettingsUi();
   if (!sndOn) {
     Tone.Transport.pause();
   } else {
@@ -442,6 +443,8 @@ const setVol = function(v) {
   try { Tone.Master.volume.value = Tone.gainToDb(Math.max(0.01, vol)); } catch(e) {}
   let gs = document.getElementById('volSlider'); if (gs) gs.value = v;
   let hs = document.getElementById('homeVolSlider'); if (hs) hs.value = v;
+  let ss = document.getElementById('settingsVolSlider'); if (ss) ss.value = v;
+  let vp = document.getElementById('settingsVolPercent'); if (vp) vp.textContent = v + '%';
 };
 
 /**

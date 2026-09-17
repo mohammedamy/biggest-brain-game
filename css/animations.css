@@ -120,3 +120,15 @@
     box-shadow: 0 6px 10px rgba(42, 191, 191, .25);
   }
 }
+@keyframes cuFloat {
+  0% {
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.03) rotate(2deg);
+  }
+  100% {
+    transform: translateY(3px) scale(0.98) rotate(-2deg);
+  }
+}
+
