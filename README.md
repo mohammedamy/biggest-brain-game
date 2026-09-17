@@ -12,12 +12,13 @@ A competitive mental math game built for **Edugates International School** stude
 ## ✨ Features
 
 - 🏆 **7 unique brain challenge categories** with 45 seconds each
+- ⚔️ **2-Player Split-Screen Challenge Mode** — real-time head-to-head battle on the same device (touch & keyboard)
 - 🎯 **Competition Mode** — shared code ensures all players get identical questions
 - 📊 **Local leaderboard** with CSV export for teachers
 - 🔥 **Streak bonuses** — 3, 5, 10+ correct in a row for bonus points
 - 📖 **Wrong answer review** — learn from your mistakes after each game
 - 🎵 **Procedural music & SFX** powered by Tone.js
-- ♿ **Accessibility** — Big Text, Text-to-Speech
+- ♿ **Accessibility & Settings Drawer** — Big Text, Text-to-Speech, volume sliders
 - 📱 **Mobile-first** responsive design
 - 🌐 **Offline support** via Service Worker
 - ⏸️ **Tab pause** — timer freezes when you switch tabs
@@ -100,7 +101,8 @@ biggest-brain-game/
 │   ├── main.css            # Core layout, typography, variables
 │   ├── components.css      # Buttons, cards, game UI components
 │   ├── animations.css      # All @keyframes animations
-│   └── responsive.css      # Media queries for different screen sizes
+│   ├── responsive.css      # Media queries for different screen sizes
+│   └── challenge.css       # 2-Player split-screen duel styles
 ├── js/
 │   ├── config.js           # Constants & category definitions
 │   ├── state.js            # Game state & utility functions
@@ -108,6 +110,7 @@ biggest-brain-game/
 │   ├── ui.js               # DOM helpers & UI effects
 │   ├── preferences.js      # Accessibility settings (Big Text, TTS)
 │   ├── game.js             # Core game loop & flow control
+│   ├── challenge.js        # 2-Player split-screen challenge engine
 │   ├── leaderboard.js      # Scores display & CSV export
 │   └── categories/
 │       ├── calculate.js    # Math operations category

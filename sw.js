@@ -3,7 +3,7 @@
  * Provides offline caching for the game
  */
 
-const CACHE_NAME = 'eis-brain-v3';
+const CACHE_NAME = 'eis-brain-v4';
 
 const URLS_TO_CACHE = [
   './',
@@ -12,12 +12,14 @@ const URLS_TO_CACHE = [
   './css/components.css',
   './css/animations.css',
   './css/responsive.css',
+  './css/challenge.css',
   './js/config.js',
   './js/state.js',
   './js/audio.js',
   './js/ui.js',
   './js/preferences.js',
   './js/game.js',
+  './js/challenge.js',
   './js/categories/calculate.js',
   './js/categories/memorize.js',
   './js/categories/analyze.js',

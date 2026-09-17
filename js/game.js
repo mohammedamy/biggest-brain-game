@@ -4,6 +4,14 @@
 
 /** Return home */
 const goHome = function(){
+  if (typeof duel !== 'undefined' && duel.active) {
+    if (!confirm('Leave this duel? Progress will be lost.')) return;
+    clearInterval(duel.timerId);
+    duel.active = false;
+    document.body.classList.remove('challenge-mode');
+  } else {
+    document.body.classList.remove('challenge-mode');
+  }
   // #11 confirm leave if in middle of category
   if(S.ap&&S.qn>0&&S.m!=='practice'){if(!confirm('Leave this category? Your progress will be lost.'))return}
   clearInterval(S.ti);S.ap=false;streak=0;updR();show('homeScreen');if(musicOk)startHomeMusic()}

@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="css/components.css">
 <link rel="stylesheet" href="css/animations.css">
 <link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/challenge.css">
 </head>
 <body>
 <div class="bg"></div>
@@ -32,6 +33,7 @@
     <div class="bg2" style="flex-shrink:0;gap:5px;margin-top:2px">
       <button class="btn bp" onclick="askName()">🚀 Play All Categories</button>
       <button class="btn bs" onclick="askCompCode()">🏆 Competition Mode</button>
+      <button class="btn bs" onclick="showChallengeSetup()" style="background:linear-gradient(135deg,rgba(42,191,191,.25),rgba(240,215,43,.25));border-color:var(--teal);font-weight:700">⚔️ 2-Player Challenge</button>
       <button class="btn bs" onclick="showPractice()">🎯 Practice Category</button>
       <div style="display:flex;gap:5px">
         <button class="btn bs" onclick="showLB()" style="flex:1">📊 Leaderboard</button>
@@ -55,6 +57,137 @@
   <div class="screen" id="catResScreen"><div class="ct"><img class="ct-logo" src="assets/eis-logo.jpg" alt="EIS"><div class="ct-text"><div class="c1">Edugates International School</div><div class="c2">Mental Math Competition</div></div></div><div class="rc" id="catResCard"></div><div style="margin-top:5px;width:100%;display:flex;gap:5px;flex-shrink:0"><button class="btn bs" style="flex:0 0 auto;width:auto;padding:11px 13px" onclick="goHome()">🏠</button><button class="btn bp" style="flex:1" id="catResNext">Next →</button></div></div>
   <div class="screen" id="finalScreen"><div class="ct"><img class="ct-logo" src="assets/eis-logo.jpg" alt="EIS"><div class="ct-text"><div class="c1">Edugates International School</div><div class="c2">Mental Math Competition</div></div></div><div class="rc" id="finalCard" style="flex:1;min-height:0;overflow-y:auto"></div><div class="bg2" style="flex-shrink:0;margin-top:4px"><button class="btn bp" onclick="askName()">🔄 Again</button><button class="btn bs" onclick="goHome()">🏠</button></div></div>
   <div class="screen" id="lbScreen"><div class="ct"><img class="ct-logo" src="assets/eis-logo.jpg" alt="EIS"><div class="ct-text"><div class="c1">Edugates International School</div><div class="c2">Mental Math Competition</div></div></div><div style="font-family:Fredoka;font-size:1rem;font-weight:600;margin:3px 0;flex-shrink:0">🏆 Leaderboard</div><div id="lbContent" style="flex:1;width:100%;overflow-y:auto;min-height:0"></div><div class="bg2" style="flex-shrink:0;margin-top:4px"><button class="btn bs" onclick="exportCSV()">📥 CSV</button><button class="btn bs" onclick="goHome()">🏠</button></div></div>
+
+  <!-- 2-Player Challenge: Setup Screen -->
+  <div class="screen" id="challengeSetupScreen">
+    <div class="ct">
+      <img class="ct-logo" src="assets/eis-logo.jpg" alt="EIS">
+      <div class="ct-text">
+        <div class="c1">Edugates International School</div>
+        <div class="c2">2-Player Challenge Duel</div>
+      </div>
+    </div>
+    <div class="ht" style="font-size:1.25rem;margin:4px 0"><span class="em" style="font-size:1.6rem">⚔️</span>Head-to-Head Battle</div>
+    <div class="ch-setup-wrap">
+      <div class="ch-players-row">
+        <div class="ch-player-box p1-box">
+          <div class="ch-avatar-icon">🦁</div>
+          <div class="ch-player-title">Player 1 (Left)</div>
+          <input class="ch-name-inp" id="chP1Name" placeholder="Player 1" maxlength="15" autocomplete="off">
+          <span style="font-size:0.65rem;opacity:0.6;margin-top:2px">Keys: Q, W, E, R</span>
+        </div>
+        <div class="ch-vs-badge">VS</div>
+        <div class="ch-player-box p2-box">
+          <div class="ch-avatar-icon">🐯</div>
+          <div class="ch-player-title">Player 2 (Right)</div>
+          <input class="ch-name-inp" id="chP2Name" placeholder="Player 2" maxlength="15" autocomplete="off">
+          <span style="font-size:0.65rem;opacity:0.6;margin-top:2px">Keys: U, I, O, P</span>
+        </div>
+      </div>
+
+      <div class="ch-mode-section">
+        <div class="ch-sec-header">Choose Duel Battle Mode</div>
+        <div class="ch-cat-grid" id="chCatGrid"></div>
+      </div>
+
+      <div style="width:100%;max-width:600px;display:flex;flex-direction:column;gap:5px;margin-top:2px">
+        <button class="btn bp" onclick="startChallengeBattle()" style="font-size:1.05rem;padding:10px">⚔️ Start Battle!</button>
+        <button class="btn bs" onclick="goHome()">🏠 Back to Home</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2-Player Challenge: Split-Screen Battle Arena -->
+  <div class="screen" id="challengeGameScreen" style="width:100%;height:100%">
+    <div class="ch-duel-hud">
+      <div class="ch-hud-cat" id="chHudCat">🧮 Calc</div>
+      <div class="ch-hud-center">
+        <div class="ch-tug-bar">
+          <div class="ch-tug-p1" id="chTugP1"></div>
+          <div class="ch-tug-p2" id="chTugP2"></div>
+        </div>
+        <div class="gt-wrap">
+          <svg class="gt-ring" viewBox="0 0 36 36">
+            <circle class="gt-bg" cx="18" cy="18" r="16"/>
+            <circle class="gt-fg" id="chTimerRing" cx="18" cy="18" r="16" stroke-dasharray="100.53" stroke-dashoffset="0"/>
+          </svg>
+          <div class="gt" id="chTimerNum">45</div>
+        </div>
+      </div>
+      <button class="hb" onclick="goHome()" title="Exit Challenge">✕</button>
+    </div>
+
+    <div class="ch-split-arena">
+      <!-- Player 1 Arena -->
+      <div class="ch-player-arena p1-side" id="p1Arena">
+        <div class="ch-arena-header">
+          <div class="ch-arena-pinfo">
+            <span class="ch-arena-name" id="chP1HeaderName">🦁 Player 1</span>
+            <span class="ch-arena-streak" id="chP1Streak"></span>
+          </div>
+          <div class="ch-arena-stats">
+            <span class="ch-arena-qn" id="chP1Qn">Q:0</span>
+            <span class="ch-arena-score" id="chP1Score">0</span>
+          </div>
+        </div>
+        <div class="ch-card-body" id="p1Card"></div>
+      </div>
+
+      <!-- Player 2 Arena -->
+      <div class="ch-player-arena p2-side" id="p2Arena">
+        <div class="ch-arena-header">
+          <div class="ch-arena-pinfo">
+            <span class="ch-arena-name" id="chP2HeaderName">🐯 Player 2</span>
+            <span class="ch-arena-streak" id="chP2Streak"></span>
+          </div>
+          <div class="ch-arena-stats">
+            <span class="ch-arena-qn" id="chP2Qn">Q:0</span>
+            <span class="ch-arena-score" id="chP2Score">0</span>
+          </div>
+        </div>
+        <div class="ch-card-body" id="p2Card"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2-Player Challenge: Showdown Results Screen -->
+  <div class="screen" id="challengeResScreen">
+    <div class="ct">
+      <img class="ct-logo" src="assets/eis-logo.jpg" alt="EIS">
+      <div class="ct-text">
+        <div class="c1">Edugates International School</div>
+        <div class="c2">Duel Showdown Results</div>
+      </div>
+    </div>
+
+    <div class="ch-res-podium">
+      <div class="ch-winner-crown" id="chWinnerCrown">🏆</div>
+      <div class="ch-winner-text" id="chWinnerText">Player 1 Wins!</div>
+
+      <div class="ch-score-duel-row">
+        <div class="ch-res-col">
+          <span class="ch-res-pname" id="chResP1Name" style="color:var(--teal)">🦁 Player 1</span>
+          <span class="ch-res-ptot" id="chResP1Total" style="color:var(--teal)">0 pts</span>
+        </div>
+        <div class="ch-vs-badge" style="width:36px;height:36px;font-size:0.95rem">VS</div>
+        <div class="ch-res-col">
+          <span class="ch-res-pname" id="chResP2Name" style="color:var(--yellow)">🐯 Player 2</span>
+          <span class="ch-res-ptot" id="chResP2Total" style="color:var(--yellow)">0 pts</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ch-breakdown-table" id="chBreakdownTable">
+      <div style="font-family:Fredoka;font-size:0.85rem;font-weight:700;color:var(--teal);margin-bottom:4px;text-align:center">Category Breakdown</div>
+      <div id="chBreakdownList"></div>
+    </div>
+
+    <div class="bg2" style="flex-shrink:0;margin-top:6px;max-width:540px">
+      <button class="btn bp" onclick="startChallengeBattle()">🔄 Rematch</button>
+      <button class="btn bs" onclick="showChallengeSetup()">⚔️ Setup & Categories</button>
+      <button class="btn bs" onclick="goHome()">🏠 Home</button>
+    </div>
+  </div>
 </div>
 
 <!-- Settings & Accessibility Drawer -->
@@ -132,5 +265,6 @@
 <!-- Game Logic -->
 <script src="js/leaderboard.js"></script>
 <script src="js/game.js"></script>
+<script src="js/challenge.js"></script>
 </body>
 </html>
