@@ -227,13 +227,17 @@ const updateDuelHud = function() {
 };
 
 /**
- * Generate a deterministic question for any category based on question number & seed
+ * Generate an equivalent-difficulty question for a player based on question number & seed
+ * Both players get the exact same difficulty tier and structure, but distinct numbers/choices
+ * so they cannot screen-cheat or copy answers!
  * @param {string} catId
  * @param {number} qn
+ * @param {'p1'|'p2'} pk - Player key
  * @returns {Object} Question descriptor
  */
-const getDeterministicQuestion = function(catId, qn) {
-  let qSeed = (duel.seed + qn * 13337) >>> 0;
+const getDeterministicQuestion = function(catId, qn, pk) {
+  let pOffset = (pk === 'p1') ? 10007 : 77777;
+  let qSeed = (duel.seed + qn * 13337 + pOffset) >>> 0;
   let rng = makeSeededRng(qSeed);
   let d = Math.min(Math.ceil(qn / 2), 5);
 
@@ -263,7 +267,7 @@ const getDeterministicQuestion = function(catId, qn) {
 
   if (catId === 'calculate') {
     let pool = d <= 2 ? ['add', 'sub', 'mul'] : d <= 3 ? ['sub', 'mul', 'mix'] : ['mul', 'mix', 'miss'];
-    let t = pool[qri(0, pool.length - 1)];
+    let t = pool[(qn - 1) % pool.length]; // Identical operation family on this question index
     if (t === 'add') {
       let x = qri(10, 40 + d * 15), y = qri(10, 40 + d * 15);
       return { ins: 'Solve', qText: x + ' + ' + y, opts: qgenO(x + y, 4), cor: x + y };
@@ -281,7 +285,7 @@ const getDeterministicQuestion = function(catId, qn) {
       return { ins: 'Solve', qText: '? × ' + y + ' = ' + (x * y), opts: qgenO(x, 4), cor: x };
     }
   } else if (catId === 'analyze') {
-    let pt = qri(1, Math.min(d, 4));
+    let pt = ((qn - 1) % 4) + 1; // Symmetrical sequence pattern category
     let ans, ss;
     if (pt === 1) {
       let st = qri(2, 15), sp = qri(2, 4 + d);
@@ -324,7 +328,6 @@ const getDeterministicQuestion = function(catId, qn) {
     let pool = qshuf(OBJ).slice(0, 4);
     let heavy = pool[0].e;
     let other1 = pool[1].e, other2 = pool[2].e;
-    // Two balance clues: heavy > other1, other1 > other2
     let clue1 = '<div style="font-size:1.4rem">' + heavy + ' ⚖️ ' + other1 + '</div>';
     let clue2 = '<div style="font-size:1.4rem">' + other1 + ' ⚖️ ' + other2 + '</div>';
     let clues = qshuf([clue1, clue2]).join('');
@@ -337,7 +340,6 @@ const getDeterministicQuestion = function(catId, qn) {
       isString: true
     };
   } else if (catId === 'visualize') {
-    // 3D cubes count with rapid 4 MCQ options
     let layers = qri(2, Math.min(3 + d, 5));
     let totalCubes = qri(6, 12 + d * 3);
     return {
@@ -347,11 +349,9 @@ const getDeterministicQuestion = function(catId, qn) {
       cor: totalCubes
     };
   } else if (catId === 'memorize') {
-    // Sequence recall: 4-6 digits
     let len = Math.min(3 + Math.floor(qn / 2), 6);
     let digits = '';
     for (let i = 0; i < len; i++) digits += qri(1, 9);
-    // 3 plausible distractors
     let dist = [];
     while (dist.length < 3) {
       let dStr = digits.slice();
@@ -368,8 +368,7 @@ const getDeterministicQuestion = function(catId, qn) {
       cor: digits
     };
   } else if (catId === 'countup') {
-    // Mini Count Up arena for split screen
-    let count = 4 + Math.min(qn - 1, 2); // 4 to 6 numbers
+    let count = 4 + Math.min(qn - 1, 2);
     let nums = [];
     let used = {};
     for (let i = 0; i < count; i++) {
@@ -386,7 +385,6 @@ const getDeterministicQuestion = function(catId, qn) {
     };
   }
 
-  // Fallback calculate
   return { ins: 'Solve', qText: '5 + 5', opts: [10, 8, 12, 15], cor: 10 };
 };
 
@@ -407,7 +405,7 @@ const nextDuelQuestion = function(pk) {
   if (!card) return;
 
   let cat = duel.catList[duel.ci];
-  let q = getDeterministicQuestion(cat.id, p.qn);
+  let q = getDeterministicQuestion(cat.id, p.qn, pk);
 
   // Key badges for desktop keyboard access:
   // P1: Q, W, E, R
