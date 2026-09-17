@@ -13,8 +13,8 @@ let duel = {
   timer: 45,
   timerId: null,
   seed: 0,
-  p1: { name: 'Player 1', avatar: '🦁', score: 0, qn: 0, correct: 0, wrong: 0, streak: 0, maxStreak: 0, ap: true, st: 0, catScores: {}, cuNext: 0, cuNums: [] },
-  p2: { name: 'Player 2', avatar: '🐯', score: 0, qn: 0, correct: 0, wrong: 0, streak: 0, maxStreak: 0, ap: true, st: 0, catScores: {}, cuNext: 0, cuNums: [] }
+  p1: { name: 'Player 1', avatar: '🦁', score: 0, qn: 0, correct: 0, wrong: 0, streak: 0, maxStreak: 0, ap: true, st: 0, catScores: {}, cuNext: 0, cuNums: [], memSeq: '', memIn: '', memTimer: null, memLen: 0, visAns: 0, visIn: '' },
+  p2: { name: 'Player 2', avatar: '🐯', score: 0, qn: 0, correct: 0, wrong: 0, streak: 0, maxStreak: 0, ap: true, st: 0, catScores: {}, cuNext: 0, cuNums: [], memSeq: '', memIn: '', memTimer: null, memLen: 0, visAns: 0, visIn: '' }
 };
 
 /**
@@ -24,6 +24,8 @@ const showChallengeSetup = function() {
   document.body.classList.remove('challenge-mode');
   duel.active = false;
   clearInterval(duel.timerId);
+  if (duel.p1.memTimer) { clearTimeout(duel.p1.memTimer); duel.p1.memTimer = null; }
+  if (duel.p2.memTimer) { clearTimeout(duel.p2.memTimer); duel.p2.memTimer = null; }
 
   // Restore player names if previously entered
   let p1Inp = document.getElementById('chP1Name');
@@ -325,55 +327,82 @@ const getDeterministicQuestion = function(catId, qn, pk) {
       fourPool: four
     };
   } else if (catId === 'weigh') {
-    let pool = qshuf(OBJ).slice(0, 4);
-    let heavy = pool[0].e;
-    let other1 = pool[1].e, other2 = pool[2].e;
-    let clue1 = '<div style="font-size:1.4rem">' + heavy + ' ⚖️ ' + other1 + '</div>';
-    let clue2 = '<div style="font-size:1.4rem">' + other1 + ' ⚖️ ' + other2 + '</div>';
-    let clues = qshuf([clue1, clue2]).join('');
-    let choices = qshuf([heavy, other1, other2, pool[3].e]);
+    let p = qshuf(OBJ).slice(0, d <= 1 ? 3 : d <= 3 ? 4 : 5);
+    let hv, clues;
+    let localMk1 = function(a, b) {
+      return { l: [a], r: [b], rs: a.w > b.w ? 'left' : a.w < b.w ? 'right' : 'equal' };
+    };
+    let localMkG = function(la, ra) {
+      let lw = 0, rw = 0;
+      la.forEach(function(o) { lw += o.w; });
+      ra.forEach(function(o) { rw += o.w; });
+      return { l: la, r: ra, rs: lw > rw ? 'left' : lw < rw ? 'right' : 'equal' };
+    };
+    let localFlip = function(cl) {
+      return { l: cl.r, r: cl.l, rs: cl.rs === 'left' ? 'right' : cl.rs === 'right' ? 'left' : 'equal' };
+    };
+
+    if (d <= 1) {
+      let A = qri(35, 55), B = qri(18, A - 6), C = qri(5, B - 4);
+      p[0].w = A; p[1].w = B; p[2].w = C; hv = p[0];
+      clues = [localMk1(p[0], p[1]), localMk1(p[1], p[2])];
+    } else if (d === 2) {
+      let A = qri(42, 60), C2 = qri(25, A - 6), B2 = qri(12, C2 - 4), D2 = qri(5, B2 - 2);
+      p[0].w = A; p[1].w = B2; p[2].w = C2; p[3].w = D2; hv = p[0];
+      clues = [localMk1(p[0], p[2]), localMk1(p[2], p[1]), localMk1(p[2], p[3])];
+    } else if (d === 3) {
+      let A = qri(45, 65), D3 = qri(28, A - 8), B3 = qri(15, D3 - 5), C3 = qri(8, B3 - 2);
+      while (C3 + A <= D3 + B3) A += qri(2, 5);
+      p[0].w = A; p[1].w = B3; p[2].w = C3; p[3].w = D3; hv = p[0];
+      clues = [localMk1(p[3], p[1]), localMk1(p[3], p[2]), localMkG([p[2], p[0]], [p[3], p[1]])];
+    } else if (d === 4) {
+      let A = qri(52, 72), B4 = qri(34, A - 10), C4 = qri(24, B4 - 4), D4 = qri(15, C4 - 4), E4 = qri(5, D4 - 4);
+      while (A + E4 <= B4 + D4) A += qri(2, 5);
+      p[0].w = A; p[1].w = B4; p[2].w = C4; p[3].w = D4; p[4].w = E4; hv = p[0];
+      clues = [localMk1(p[1], p[2]), localMk1(p[2], p[3]), localMk1(p[3], p[4]), localMkG([p[0], p[4]], [p[1], p[3]])];
+    } else {
+      let A = qri(58, 80), B5 = qri(36, A - 14), C5 = qri(25, B5 - 4), D5 = qri(17, C5 - 3), E5 = qri(6, D5 - 4);
+      while (C5 + D5 <= B5) C5 += qri(1, 3);
+      while (A + E5 <= B5 + C5) A += qri(2, 5);
+      p[0].w = A; p[1].w = B5; p[2].w = C5; p[3].w = D5; p[4].w = E5; hv = p[0];
+      clues = [localMkG([p[2], p[3]], [p[1]]), localMk1(p[1], p[2]), localMk1(p[3], p[4]), localMkG([p[0], p[4]], [p[1], p[2]])];
+    }
+    clues = qshuf(clues.map(function(cl) { return (rng() > 0.5) ? localFlip(cl) : cl; }));
+    let choices = qshuf(p);
     return {
-      ins: 'Which is HEAVIEST?',
-      qHtml: '<div style="display:flex;gap:12px;margin:4px 0">' + clues + '</div>',
-      opts: choices,
-      cor: heavy,
-      isString: true
+      ins: '⚖️ Which is the heaviest?',
+      isWeigh: true,
+      clues: clues,
+      choices: choices,
+      cor: hv.e
     };
   } else if (catId === 'visualize') {
-    let layers = qri(2, Math.min(3 + d, 5));
-    let totalCubes = qri(6, 12 + d * 3);
+    let data = generateLegoSvgData(qri, d, qn, pk + '_');
     return {
-      ins: 'Count the 3D cubes',
-      qHtml: '<div style="font-size:2.8rem;line-height:1;margin:4px 0">🧊 × ?</div><div style="font-size:.7rem;opacity:.6">(' + layers + ' layers deep)</div>',
-      opts: qgenO(totalCubes, 4),
-      cor: totalCubes
+      ins: 'Count ALL cubes (hidden too)',
+      isVis: true,
+      svg: data.svg,
+      cor: data.ans
     };
   } else if (catId === 'memorize') {
-    let len = Math.min(3 + Math.floor(qn / 2), 6);
+    let len = 3 + Math.min(Math.floor(qn / 2), 4);
     let digits = '';
     for (let i = 0; i < len; i++) digits += qri(1, 9);
-    let dist = [];
-    while (dist.length < 3) {
-      let dStr = digits.slice();
-      let pos = qri(0, len - 1);
-      let newD = String(qri(1, 9));
-      dStr = dStr.substring(0, pos) + newD + dStr.substring(pos + 1);
-      if (dStr !== digits && dist.indexOf(dStr) === -1) dist.push(dStr);
-    }
     return {
-      ins: 'Memorize & Recall',
+      ins: 'Memorize!',
       isMem: true,
       seq: digits,
-      opts: qshuf([digits].concat(dist)),
-      cor: digits
+      len: len
     };
   } else if (catId === 'countup') {
-    let count = 4 + Math.min(qn - 1, 2);
+    let count = 3 + Math.min(qn - 1, 4);
+    let minV = (qn <= 2) ? 1 : (qn <= 4) ? 10 : 100;
+    let maxV = (qn <= 2) ? 9 : (qn <= 4) ? 99 : 999;
     let nums = [];
     let used = {};
     for (let i = 0; i < count; i++) {
       let n;
-      do { n = qri(1, 50); } while (used[n]);
+      do { n = qri(minV, maxV); } while (used[n]);
       used[n] = true;
       nums.push(n);
     }
@@ -389,6 +418,152 @@ const getDeterministicQuestion = function(catId, qn, pk) {
 };
 
 /**
+ * Show Memorize Input boxes and numpad for duel player
+ * @param {'p1'|'p2'} pk
+ */
+const showDuelMemInput = function(pk) {
+  let p = duel[pk];
+  p.memIn = '';
+  let card = document.getElementById(pk + 'Card');
+  if (!card) return;
+
+  let boxes = '<div class="ch-mem-row">';
+  for (let i = 0; i < p.memLen; i++) {
+    boxes += '<div class="ch-mem-box ' + (i === 0 ? 'active' : '') + '" id="' + pk + '_mb' + i + '"></div>';
+  }
+  boxes += '</div>';
+
+  let npHtml = '<div class="numpad">' +
+    '<div class="nk" onclick="handleDuelMemTap(\'' + pk + '\', 1)">1</div><div class="nk" onclick="handleDuelMemTap(\'' + pk + '\', 2)">2</div><div class="nk" onclick="handleDuelMemTap(\'' + pk + '\', 3)">3</div>' +
+    '<div class="nk" onclick="handleDuelMemTap(\'' + pk + '\', 4)">4</div><div class="nk" onclick="handleDuelMemTap(\'' + pk + '\', 5)">5</div><div class="nk" onclick="handleDuelMemTap(\'' + pk + '\', 6)">6</div>' +
+    '<div class="nk" onclick="handleDuelMemTap(\'' + pk + '\', 7)">7</div><div class="nk" onclick="handleDuelMemTap(\'' + pk + '\', 8)">8</div><div class="nk" onclick="handleDuelMemTap(\'' + pk + '\', 9)">9</div>' +
+    '<div class="nk nk-del" onclick="handleDuelMemDel(\'' + pk + '\')">⌫</div><div class="nk" onclick="handleDuelMemTap(\'' + pk + '\', 0)">0</div>' +
+    '<div class="nk" style="background:rgba(91,200,160,.12);border-color:var(--green)" onclick="handleDuelMemSub(\'' + pk + '\')">✓</div>' +
+  '</div>';
+
+  card.innerHTML = '<div class="ins">Enter sequence</div>' + boxes + npHtml;
+};
+
+/**
+ * Handle numpad tap for duel memorize
+ * @param {'p1'|'p2'} pk
+ * @param {number} n
+ */
+const handleDuelMemTap = function(pk, n) {
+  let p = duel[pk];
+  if (!duel.active || !p.ap || p.memIn.length >= p.memLen) return;
+  let idx = p.memIn.length;
+  p.memIn += n;
+  let b = document.getElementById(pk + '_mb' + idx);
+  if (b) {
+    b.textContent = n;
+    b.classList.remove('active');
+  }
+  if (p.memIn.length < p.memLen) {
+    let nextB = document.getElementById(pk + '_mb' + p.memIn.length);
+    if (nextB) nextB.classList.add('active');
+  } else {
+    handleDuelMemSub(pk);
+  }
+};
+
+/**
+ * Handle backspace for duel memorize
+ * @param {'p1'|'p2'} pk
+ */
+const handleDuelMemDel = function(pk) {
+  let p = duel[pk];
+  if (!duel.active || !p.ap || p.memIn.length <= 0) return;
+  let curB = document.getElementById(pk + '_mb' + p.memIn.length);
+  if (curB) curB.classList.remove('active');
+  p.memIn = p.memIn.slice(0, -1);
+  let b = document.getElementById(pk + '_mb' + p.memIn.length);
+  if (b) {
+    b.textContent = '';
+    b.classList.add('active');
+  }
+};
+
+/**
+ * Handle submit for duel memorize
+ * @param {'p1'|'p2'} pk
+ */
+const handleDuelMemSub = function(pk) {
+  let p = duel[pk];
+  if (!duel.active || !p.ap || !p.memIn.length) return;
+  p.ap = false;
+  let isCorrect = (p.memIn === p.memSeq);
+  for (let i = 0; i < p.memLen; i++) {
+    let b = document.getElementById(pk + '_mb' + i);
+    if (b) {
+      b.classList.remove('active');
+      if (p.memIn[i] === p.memSeq[i]) {
+        b.style.borderColor = 'var(--green)';
+        b.style.background = 'rgba(91,200,160,.2)';
+      } else {
+        b.style.borderColor = '#ff5050';
+        b.style.background = 'rgba(255,80,80,.15)';
+      }
+    }
+  }
+  handleDuelScoring(pk, isCorrect);
+  setTimeout(function() {
+    nextDuelQuestion(pk);
+  }, 450);
+};
+
+/**
+ * Handle numpad tap for duel visualize
+ * @param {'p1'|'p2'} pk
+ * @param {number} n
+ */
+const handleDuelVisTap = function(pk, n) {
+  let p = duel[pk];
+  if (!duel.active || !p.ap || p.visIn.length >= 3) return;
+  p.visIn += n;
+  let d = document.getElementById(pk + 'Ld');
+  if (d) d.textContent = p.visIn;
+};
+
+/**
+ * Handle backspace for duel visualize
+ * @param {'p1'|'p2'} pk
+ */
+const handleDuelVisDel = function(pk) {
+  let p = duel[pk];
+  if (!duel.active || !p.ap || !p.visIn.length) return;
+  p.visIn = p.visIn.slice(0, -1);
+  let d = document.getElementById(pk + 'Ld');
+  if (d) d.textContent = p.visIn || '_';
+};
+
+/**
+ * Handle submit for duel visualize
+ * @param {'p1'|'p2'} pk
+ */
+const handleDuelVisSub = function(pk) {
+  let p = duel[pk];
+  if (!duel.active || !p.ap || !p.visIn.length) return;
+  p.ap = false;
+  let d = document.getElementById(pk + 'Ld');
+  let val = parseInt(p.visIn);
+  let isCorrect = (val === p.visAns);
+  if (d) {
+    if (isCorrect) {
+      d.style.color = 'var(--green)';
+      d.textContent = '✓ ' + p.visAns;
+    } else {
+      d.style.color = '#ff5050';
+      d.textContent = '✗→' + p.visAns;
+    }
+  }
+  handleDuelScoring(pk, isCorrect);
+  setTimeout(function() {
+    nextDuelQuestion(pk);
+  }, 450);
+};
+
+/**
  * Render next question for Player 1 or Player 2
  * @param {'p1'|'p2'} pk - Player key
  */
@@ -399,17 +574,20 @@ const nextDuelQuestion = function(pk) {
   p.st = Date.now();
   p.ap = true;
 
+  if (p.memTimer) {
+    clearTimeout(p.memTimer);
+    p.memTimer = null;
+  }
+
   updateDuelHud();
 
   let card = document.getElementById(pk + 'Card');
   if (!card) return;
+  card.onclick = null;
 
   let cat = duel.catList[duel.ci];
   let q = getDeterministicQuestion(cat.id, p.qn, pk);
 
-  // Key badges for desktop keyboard access:
-  // P1: Q, W, E, R
-  // P2: U, I, O, P
   let keyLabels = (pk === 'p1') ? ['Q', 'W', 'E', 'R'] : ['U', 'I', 'O', 'P'];
 
   if (q.isCountUp) {
@@ -421,45 +599,129 @@ const nextDuelQuestion = function(pk) {
     let aw = ar.offsetWidth || 180;
     let ah = ar.offsetHeight || 130;
 
-    let cols = 3, rows = 2;
+    let cols = (q.nums.length <= 4) ? 2 : 3;
+    let rows = (q.nums.length <= 4) ? 2 : 2;
+    if (q.nums.length > 6) { rows = 3; }
     let cellW = aw / cols;
     let cellH = ah / rows;
     let slots = [];
     for (let r = 0; r < rows; r++) for (let cl = 0; cl < cols; cl++) slots.push({ r: r, c: cl });
     slots = shuf(slots);
 
-    let colors = ['#ff4d6a', '#ffd93d', '#6bcb77', '#4d96ff', '#c780fa', '#ff884b'];
+    let colors = ['#ff4d6a', '#ffd93d', '#6bcb77', '#4d96ff', '#ff884b', '#c780fa', '#2abfbf', '#ff6b8b'];
+    let sf = shuf(p.cuNums.map(function(n, i) { return { n: n, i: i }; }));
 
-    p.cuNums.forEach(function(n, idx) {
+    sf.forEach(function(item, idx) {
       let slot = slots[idx % slots.length];
-      let sz = Math.min(cellW * 0.72, cellH * 0.72, 48);
-      let px = Math.round(slot.c * cellW + (cellW - sz) / 2);
-      let py = Math.round(slot.r * cellH + (cellH - sz) / 2);
+      let maxSz = Math.min(cellW * 0.70, cellH * 0.70, 48);
+      let minSz = Math.min(cellW * 0.56, cellH * 0.56, 38);
+      let sz = Math.round(minSz + Math.random() * (maxSz - minSz));
+
+      let marginX = (cellW - sz) / 2;
+      let marginY = (cellH - sz) / 2;
+      let safeMarginX = Math.max(0, marginX - 5);
+      let safeMarginY = Math.max(0, marginY - 5);
+      let jitterX = (Math.random() * 2 - 1) * Math.min(safeMarginX, 2.5);
+      let jitterY = (Math.random() * 2 - 1) * Math.min(safeMarginY, 2.5);
+
+      let px = Math.round(slot.c * cellW + marginX + jitterX);
+      let py = Math.round(slot.r * cellH + marginY + jitterY);
+
+      let col = colors[item.i % colors.length];
+      let animName = 'cuFloat' + ((idx % 4) + 1);
+      let dur = (2.6 + Math.random() * 1.2).toFixed(1) + 's';
+      let del = (Math.random() * 1.5).toFixed(1) + 's';
 
       let el = document.createElement('div');
       el.className = 'cu-circle';
-      el.id = pk + 'cu' + idx;
-      el.onclick = function() { handleDuelCountUpTap(pk, idx); };
-      el.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;left:' + px + 'px;top:' + py + 'px;background:' + colors[idx % colors.length] + ';font-size:' + Math.round(sz * 0.42) + 'px;border-width:2.5px;';
-      el.textContent = n;
+      el.id = pk + 'cu' + item.i;
+      el.onclick = function() { handleDuelCountUpTap(pk, item.i); };
+
+      let fontSize = Math.round(sz * (String(item.n).length > 2 ? 0.32 : 0.40));
+      el.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;left:' + px + 'px;top:' + py + 'px;' +
+        'background:' + col + ';font-size:' + fontSize + 'px;font-weight:800;' +
+        'text-decoration:underline;text-underline-offset:3px;' +
+        'animation:' + animName + ' ' + dur + ' ease-in-out ' + del + ' infinite;';
+      el.textContent = item.n;
       ar.appendChild(el);
     });
     return;
   }
 
   if (q.isMem) {
-    card.innerHTML = '<div class="ins">Memorize!</div><div class="cd2" style="letter-spacing:4px;color:var(--yellow)">' + q.seq + '</div>';
-    setTimeout(function() {
+    p.memSeq = q.seq;
+    p.memIn = '';
+    p.memLen = q.len;
+
+    card.onclick = function() {
+      if (p.memTimer) {
+        clearTimeout(p.memTimer);
+        p.memTimer = null;
+        card.onclick = null;
+        showDuelMemInput(pk);
+      }
+    };
+
+    card.innerHTML = '<div class="ins">' + q.ins + '</div>' +
+      '<div class="cd2" style="letter-spacing:5px;color:var(--yellow);cursor:pointer">' + q.seq.split('').join('  ') + '</div>' +
+      '<div style="font-size:11px;opacity:.4;margin-top:4px;cursor:pointer">Tap when ready</div>';
+
+    p.memTimer = setTimeout(function() {
       if (!duel.active || !p.ap) return;
-      let optHtml = '<div class="og">' + q.opts.map(function(o, i) {
-        return '<button class="ob ob-' + i + '" onclick="handleDuelMcq(\'' + pk + '\', this, \'' + o + '\', \'' + q.cor + '\')"><span class="key-badge">' + keyLabels[i] + '</span>' + o + '</button>';
-      }).join('') + '</div>';
-      card.innerHTML = '<div class="ins">Which sequence was it?</div>' + optHtml;
-    }, 1200);
+      p.memTimer = null;
+      card.onclick = null;
+      showDuelMemInput(pk);
+    }, 1000 + q.len * 650);
+    return;
+  }
+
+  if (q.isVis) {
+    p.visAns = q.cor;
+    p.visIn = '';
+    card.onclick = null;
+
+    let npHtml = '<div class="numpad">' +
+      '<div class="nk" onclick="handleDuelVisTap(\'' + pk + '\', 1)">1</div><div class="nk" onclick="handleDuelVisTap(\'' + pk + '\', 2)">2</div><div class="nk" onclick="handleDuelVisTap(\'' + pk + '\', 3)">3</div>' +
+      '<div class="nk" onclick="handleDuelVisTap(\'' + pk + '\', 4)">4</div><div class="nk" onclick="handleDuelVisTap(\'' + pk + '\', 5)">5</div><div class="nk" onclick="handleDuelVisTap(\'' + pk + '\', 6)">6</div>' +
+      '<div class="nk" onclick="handleDuelVisTap(\'' + pk + '\', 7)">7</div><div class="nk" onclick="handleDuelVisTap(\'' + pk + '\', 8)">8</div><div class="nk" onclick="handleDuelVisTap(\'' + pk + '\', 9)">9</div>' +
+      '<div class="nk nk-del" onclick="handleDuelVisDel(\'' + pk + '\')">⌫</div><div class="nk" onclick="handleDuelVisTap(\'' + pk + '\', 0)">0</div>' +
+      '<div class="nk" style="background:rgba(91,200,160,.12);border-color:var(--green)" onclick="handleDuelVisSub(\'' + pk + '\')">✓</div>' +
+    '</div>';
+
+    card.innerHTML = '<div class="ins">' + q.ins + '</div>' +
+      '<div class="ch-vis-wrap">' + q.svg + '</div>' +
+      '<div class="ch-vis-display" id="' + pk + 'Ld">_</div>' +
+      npHtml;
+    return;
+  }
+
+  if (q.isWeigh) {
+    card.onclick = null;
+    let bh = '<div class="bwrap">';
+    q.clues.forEach(function(cl, idx) {
+      bh += '<div class="bitem" id="' + pk + '_bi' + idx + '"><div class="bbeam"><div class="bside bl"><div class="btray">' + cl.l.map(function(o){return o.e;}).join(' ') + '</div><div class="brope"></div></div><div class="bbar"></div><div class="bful"></div><div class="bside br"><div class="btray">' + cl.r.map(function(o){return o.e;}).join(' ') + '</div><div class="brope"></div></div></div></div>';
+    });
+    bh += '</div>';
+
+    let optHtml = '<div class="og">' + q.choices.map(function(o, i) {
+      return '<button class="ob ob-' + i + '" onclick="handleDuelMcq(\'' + pk + '\', this, \'' + o.e + '\', \'' + q.cor + '\')"><span class="key-badge">' + keyLabels[i] + '</span>' + o.e + '</button>';
+    }).join('') + '</div>';
+
+    card.innerHTML = '<div class="ins">' + q.ins + '</div>' + bh + optHtml;
+
+    setTimeout(function() {
+      if (!duel.active) return;
+      q.clues.forEach(function(cl, idx) {
+        let tc = cl.rs === 'left' ? 'tl' : cl.rs === 'right' ? 'tr' : 'te';
+        let el = document.getElementById(pk + '_bi' + idx);
+        if (el) el.classList.add(tc);
+      });
+    }, 180);
     return;
   }
 
   if (q.isReact) {
+    card.onclick = null;
     let optHtml = '<div class="og">' + q.opts.map(function(name, i) {
       let btnInk = q.fourPool[(i + 1) % 4].c;
       let btnBg = q.fourPool[(i + 2) % 4].c + '22';
@@ -470,7 +732,8 @@ const nextDuelQuestion = function(pk) {
     return;
   }
 
-  // Standard MCQ (Calculate, Analyze, Weigh, Visualize)
+  // Standard MCQ (Calculate, Analyze)
+  card.onclick = null;
   let content = q.qHtml || ('<div class="cd2">' + q.qText + '</div>');
   let optHtml = '<div class="og">' + q.opts.map(function(o, i) {
     let corCheck = (typeof o === 'string') ? ('\'' + o + '\', \'' + q.cor + '\'') : (o + ', ' + q.cor);
@@ -594,6 +857,8 @@ const handleDuelScoring = function(pk, isCorrect) {
 const endDuelCategory = function() {
   clearInterval(duel.timerId);
   duel.active = false;
+  if (duel.p1.memTimer) { clearTimeout(duel.p1.memTimer); duel.p1.memTimer = null; }
+  if (duel.p2.memTimer) { clearTimeout(duel.p2.memTimer); duel.p2.memTimer = null; }
   let cat = duel.catList[duel.ci];
 
   // Save category scores
@@ -696,6 +961,40 @@ document.addEventListener('keydown', function(e) {
     if (card) {
       let btns = card.querySelectorAll('.ob');
       if (btns[idx]) btns[idx].click();
+    }
+  }
+
+  // Handle on-screen Numpads for Player 1
+  let p1Card = document.getElementById('p1Card');
+  if (p1Card && p1Card.querySelector('.numpad') && duel.p1.ap) {
+    if (e.code.startsWith('Digit')) {
+      let d = parseInt(e.code.replace('Digit', ''));
+      if (!isNaN(d)) {
+        if (p1Card.querySelector('.ch-mem-row')) handleDuelMemTap('p1', d);
+        else if (p1Card.querySelector('.ch-vis-display')) handleDuelVisTap('p1', d);
+      }
+    } else if (e.code === 'Backspace') {
+      if (p1Card.querySelector('.ch-mem-row')) handleDuelMemDel('p1');
+      else if (p1Card.querySelector('.ch-vis-display')) handleDuelVisDel('p1');
+    } else if (e.code === 'Enter') {
+      if (p1Card.querySelector('.ch-mem-row')) handleDuelMemSub('p1');
+      else if (p1Card.querySelector('.ch-vis-display')) handleDuelVisSub('p1');
+    }
+  }
+
+  // Handle on-screen Numpads for Player 2
+  let p2Card = document.getElementById('p2Card');
+  if (p2Card && p2Card.querySelector('.numpad') && duel.p2.ap) {
+    if (e.code.startsWith('Numpad') && !isNaN(parseInt(e.code.replace('Numpad', '')))) {
+      let d = parseInt(e.code.replace('Numpad', ''));
+      if (p2Card.querySelector('.ch-mem-row')) handleDuelMemTap('p2', d);
+      else if (p2Card.querySelector('.ch-vis-display')) handleDuelVisTap('p2', d);
+    } else if (e.code === 'NumpadSubtract' || e.code === 'Delete') {
+      if (p2Card.querySelector('.ch-mem-row')) handleDuelMemDel('p2');
+      else if (p2Card.querySelector('.ch-vis-display')) handleDuelVisDel('p2');
+    } else if (e.code === 'NumpadEnter') {
+      if (p2Card.querySelector('.ch-mem-row')) handleDuelMemSub('p2');
+      else if (p2Card.querySelector('.ch-vis-display')) handleDuelVisSub('p2');
     }
   }
 });

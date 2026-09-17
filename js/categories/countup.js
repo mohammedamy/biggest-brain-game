@@ -77,42 +77,42 @@ const gCU = function(d) {
     var slotLeft = slot.c * cellW;
     var slotTop = slot.r * cellH;
 
-    // Sized comfortably within cell boundaries
-    var maxSz = Math.min(cellW * 0.78, cellH * 0.78, 86);
-    var minSz = Math.max(46, Math.min(cellW * 0.64, cellH * 0.64, 70));
+    // Sized safely within cell boundaries to guarantee zero overlap while moving
+    var maxSz = Math.min(cellW * 0.70, cellH * 0.70, 78);
+    var minSz = Math.min(cellW * 0.56, cellH * 0.56, 62);
     var sz = Math.round(ri(Math.floor(minSz), Math.floor(maxSz)));
 
-    // Bounded jitter strictly inside the assigned cell
+    // Bounded placement strictly preserving movement clearance margin
     var marginX = (cellW - sz) / 2;
     var marginY = (cellH - sz) / 2;
-    var maxJitterX = Math.max(0, marginX - 4);
-    var maxJitterY = Math.max(0, marginY - 4);
-    var jitterX = (Math.random() * 2 - 1) * maxJitterX;
-    var jitterY = (Math.random() * 2 - 1) * maxJitterY;
+    var safeMarginX = Math.max(0, marginX - 6);
+    var safeMarginY = Math.max(0, marginY - 6);
+    var jitterX = (Math.random() * 2 - 1) * Math.min(safeMarginX, 3);
+    var jitterY = (Math.random() * 2 - 1) * Math.min(safeMarginY, 3);
 
     var px = Math.round(slotLeft + marginX + jitterX);
     var py = Math.round(slotTop + marginY + jitterY);
 
     var col = cCols[item.i % cCols.length];
-    var dur = (ri(24, 38) / 10) + 's';
-    var del = (ri(0, 15) / 10) + 's';
+    var animName = 'cuFloat' + ((idx % 4) + 1);
+    var dur = (ri(26, 38) / 10) + 's';
+    var del = (ri(0, 18) / 10) + 's';
 
     var el = document.createElement('div');
     el.className = 'cu-circle';
     el.id = 'cu' + item.i;
     el.onclick = function() { cuTap(item.i); };
 
-    // Ambiguity indicator for 6 and 9
-    var isAmbiguous = (item.n === 6 || item.n === 9);
-    var textDecoration = isAmbiguous ? 'text-decoration: underline; text-underline-offset: 4px;' : '';
+    // All numbers are bold and underlined with lively rotation & floating animation
     var fontSize = Math.round(sz * (String(item.n).length > 2 ? 0.32 : 0.40));
 
     el.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;' +
       'left:' + px + 'px;top:' + py + 'px;' +
       'background:' + col + ';' +
       'font-size:' + fontSize + 'px;' +
-      textDecoration +
-      'animation: cuFloat ' + dur + ' ease-in-out ' + del + ' infinite alternate;';
+      'font-weight:800;' +
+      'text-decoration:underline;text-underline-offset:4px;' +
+      'animation:' + animName + ' ' + dur + ' ease-in-out ' + del + ' infinite;';
 
     el.textContent = item.n;
     ar.appendChild(el);

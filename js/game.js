@@ -7,6 +7,8 @@ const goHome = function(){
   if (typeof duel !== 'undefined' && duel.active) {
     if (!confirm('Leave this duel? Progress will be lost.')) return;
     clearInterval(duel.timerId);
+    if (duel.p1 && duel.p1.memTimer) { clearTimeout(duel.p1.memTimer); duel.p1.memTimer = null; }
+    if (duel.p2 && duel.p2.memTimer) { clearTimeout(duel.p2.memTimer); duel.p2.memTimer = null; }
     duel.active = false;
     document.body.classList.remove('challenge-mode');
   } else {
