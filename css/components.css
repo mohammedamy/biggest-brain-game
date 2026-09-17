@@ -323,7 +323,7 @@
 .bwrap {
   width: 100%;
   flex-shrink: 0;
-  margin-bottom: 24px;
+  margin-bottom: 50px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 32px 20px;

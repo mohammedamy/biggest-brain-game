@@ -471,10 +471,10 @@ body.challenge-mode .gc {
   gap: 10px 14px;
   width: 100%;
   max-width: 340px;
-  margin: 4px auto 8px auto;
+  margin: 4px auto 0 auto;
   align-items: center;
   justify-content: center;
-  flex: 1;
+  flex: 0 0 auto;
 }
 
 .ch-player-arena .bitem {
@@ -563,7 +563,7 @@ body.challenge-mode .gc {
 .ch-card-body.weigh-mode .og {
   width: 100%;
   max-width: 330px;
-  margin-top: auto;
+  margin-top: 50px;
   gap: 6px;
   padding-bottom: 2px;
 }
