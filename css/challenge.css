@@ -460,7 +460,7 @@ body.challenge-mode .gc {
 
 .ch-card-body.weigh-mode .ins {
   margin-top: 0;
-  margin-bottom: 2px;
+  margin-bottom: 50px;
   font-size: clamp(0.8rem, 2.4vw, 1.0rem);
   flex-shrink: 0;
 }
@@ -471,7 +471,7 @@ body.challenge-mode .gc {
   gap: 10px 14px;
   width: 100%;
   max-width: 340px;
-  margin: 4px auto 0 auto;
+  margin: 0 auto;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
