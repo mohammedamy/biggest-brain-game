@@ -3,7 +3,7 @@
  * Provides offline caching for the game
  */
 
-const CACHE_NAME = 'eis-brain-v7';
+const CACHE_NAME = 'eis-brain-v8';
 
 const URLS_TO_CACHE = [
   './',

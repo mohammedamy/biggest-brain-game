@@ -564,16 +564,16 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, .45), inset 0 3px 6px rgba(255, 255, 255, .4), inset 0 -4px 8px rgba(0, 0, 0, .5);
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.95), 0 0 3px #000, 0 0 8px rgba(0, 0, 0, 0.7);
   user-select: none;
-  -webkit-user-select: none;
-  transition: opacity .25s ease, transform .12s ease;
+  transition: opacity .25s ease, filter .15s ease;
+  will-change: left, top, transform;
 }
 .cu-circle:active {
-  transform: scale(.88) !important;
+  filter: brightness(1.25);
 }
 .cu-circle.cu-done {
   opacity: .18;
   pointer-events: none;
-  transform: scale(.8) !important;
+  filter: grayscale(0.4) brightness(0.65);
 }
 .cu-circle.cu-wrong {
   animation: sh .4s ease;

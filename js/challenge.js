@@ -24,6 +24,7 @@ const showChallengeSetup = function() {
   document.body.classList.remove('challenge-mode');
   duel.active = false;
   clearInterval(duel.timerId);
+  stopDuelCuPhysics();
   if (duel.p1.memTimer) { clearTimeout(duel.p1.memTimer); duel.p1.memTimer = null; }
   if (duel.p2.memTimer) { clearTimeout(duel.p2.memTimer); duel.p2.memTimer = null; }
 
@@ -563,6 +564,139 @@ const handleDuelVisSub = function(pk) {
   }, 450);
 };
 
+// ==================== BATTLE COUNT UP 2D COLLISION PHYSICS ====================
+let duelCuAnimId = null;
+let duelCuCircles = { p1: [], p2: [] };
+let duelCuLastTime = 0;
+
+const stopDuelCuPhysics = function(pk) {
+  if (pk) {
+    duelCuCircles[pk] = [];
+    if (duelCuCircles.p1.length === 0 && duelCuCircles.p2.length === 0) {
+      if (duelCuAnimId) {
+        cancelAnimationFrame(duelCuAnimId);
+        duelCuAnimId = null;
+      }
+    }
+  } else {
+    duelCuCircles = { p1: [], p2: [] };
+    if (duelCuAnimId) {
+      cancelAnimationFrame(duelCuAnimId);
+      duelCuAnimId = null;
+    }
+  }
+};
+
+const startDuelCuPhysicsLoop = function() {
+  duelCuLastTime = performance.now();
+
+  const duelCuPhysicsStep = function(now) {
+    if (!duel.active || (duelCuCircles.p1.length === 0 && duelCuCircles.p2.length === 0)) {
+      stopDuelCuPhysics();
+      return;
+    }
+
+    let dt = (now - duelCuLastTime) / 1000;
+    duelCuLastTime = now;
+    if (dt > 0.035) dt = 0.035;
+
+    ['p1', 'p2'].forEach(function(pk) {
+      let circles = duelCuCircles[pk];
+      if (!circles || circles.length === 0) return;
+
+      let ar = document.getElementById(pk + 'CuArena');
+      if (!ar || !ar.isConnected) {
+        duelCuCircles[pk] = [];
+        return;
+      }
+
+      let curW = ar.offsetWidth || 190;
+      let curH = ar.offsetHeight || 160;
+
+      // 1. Move & Wall Reflections
+      for (let i = 0; i < circles.length; i++) {
+        let c = circles[i];
+        c.x += c.vx * dt;
+        c.y += c.vy * dt;
+        c.angle = (c.angle + c.rotSpeed * dt) % 360;
+
+        if (c.x - c.r < 0) {
+          c.x = c.r;
+          c.vx = Math.abs(c.vx);
+        } else if (c.x + c.r > curW) {
+          c.x = curW - c.r;
+          c.vx = -Math.abs(c.vx);
+        }
+
+        if (c.y - c.r < 0) {
+          c.y = c.r;
+          c.vy = Math.abs(c.vy);
+        } else if (c.y + c.r > curH) {
+          c.y = curH - c.r;
+          c.vy = -Math.abs(c.vy);
+        }
+      }
+
+      // 2. Elastic Circle-Circle Collisions (Zero Overlap Guaranteed)
+      for (let pass = 0; pass < 2; pass++) {
+        for (let i = 0; i < circles.length; i++) {
+          for (let j = i + 1; j < circles.length; j++) {
+            let c1 = circles[i];
+            let c2 = circles[j];
+            let dx = c2.x - c1.x;
+            let dy = c2.y - c1.y;
+            let distSq = dx * dx + dy * dy;
+            let minDist = c1.r + c2.r;
+
+            if (distSq < minDist * minDist) {
+              let dist = Math.sqrt(distSq);
+              if (dist === 0) { dx = 1; dy = 0; dist = 1; }
+              let nx = dx / dist;
+              let ny = dy / dist;
+
+              let overlap = (minDist - dist) * 0.5;
+              c1.x -= nx * overlap;
+              c1.y -= ny * overlap;
+              c2.x += nx * overlap;
+              c2.y += ny * overlap;
+
+              c1.x = Math.max(c1.r, Math.min(curW - c1.r, c1.x));
+              c1.y = Math.max(c1.r, Math.min(curH - c1.r, c1.y));
+              c2.x = Math.max(c2.r, Math.min(curW - c2.r, c2.x));
+              c2.y = Math.max(c2.r, Math.min(curH - c2.r, c2.y));
+
+              let dvx = c1.vx - c2.vx;
+              let dvy = c1.vy - c2.vy;
+              let velAlongNormal = dvx * nx + dvy * ny;
+
+              if (velAlongNormal > 0) {
+                let e = 0.98;
+                let impulse = -(1 + e) * velAlongNormal / (1 / c1.mass + 1 / c2.mass);
+                c1.vx += (impulse / c1.mass) * nx;
+                c1.vy += (impulse / c1.mass) * ny;
+                c2.vx -= (impulse / c2.mass) * nx;
+                c2.vy -= (impulse / c2.mass) * ny;
+              }
+            }
+          }
+        }
+      }
+
+      // 3. Render Positions & Rotations
+      for (let i = 0; i < circles.length; i++) {
+        let c = circles[i];
+        c.el.style.left = Math.round(c.x - c.r) + 'px';
+        c.el.style.top = Math.round(c.y - c.r) + 'px';
+        c.el.style.transform = 'rotate(' + c.angle.toFixed(1) + 'deg)';
+      }
+    });
+
+    duelCuAnimId = requestAnimationFrame(duelCuPhysicsStep);
+  };
+
+  duelCuAnimId = requestAnimationFrame(duelCuPhysicsStep);
+};
+
 /**
  * Render next question for Player 1 or Player 2
  * @param {'p1'|'p2'} pk - Player key
@@ -584,6 +718,7 @@ const nextDuelQuestion = function(pk) {
   let card = document.getElementById(pk + 'Card');
   if (!card) return;
   card.onclick = null;
+  card.classList.remove('weigh-mode');
 
   let cat = duel.catList[duel.ci];
   let q = getDeterministicQuestion(cat.id, p.qn, pk);
@@ -591,60 +726,146 @@ const nextDuelQuestion = function(pk) {
   let keyLabels = (pk === 'p1') ? ['Q', 'W', 'E', 'R'] : ['U', 'I', 'O', 'P'];
 
   if (q.isCountUp) {
+    stopDuelCuPhysics(pk);
     p.cuNums = q.nums;
     p.cuNext = 0;
     let arenaId = pk + 'CuArena';
     card.innerHTML = '<div class="ins">' + q.ins + '</div><div class="cu-arena" id="' + arenaId + '" style="height:100%;min-height:130px"></div>';
     let ar = document.getElementById(arenaId);
-    let aw = ar.offsetWidth || 180;
-    let ah = ar.offsetHeight || 130;
-
-    let cols = (q.nums.length <= 4) ? 2 : 3;
-    let rows = (q.nums.length <= 4) ? 2 : 2;
-    if (q.nums.length > 6) { rows = 3; }
-    let cellW = aw / cols;
-    let cellH = ah / rows;
-    let slots = [];
-    for (let r = 0; r < rows; r++) for (let cl = 0; cl < cols; cl++) slots.push({ r: r, c: cl });
-    slots = shuf(slots);
+    let aw = ar.offsetWidth || 190;
+    let ah = ar.offsetHeight || 160;
 
     let sf = shuf(p.cuNums.map(function(n, i) { return { n: n, i: i }; }));
 
-    sf.forEach(function(item, idx) {
-      let slot = slots[idx % slots.length];
-      let maxSz = Math.min(cellW * 0.74, cellH * 0.74, 48);
-      let minSz = Math.max(30, Math.min(cellW * 0.46, cellH * 0.46, 36));
-      let sz = Math.round(minSz + Math.random() * (maxSz - minSz));
+    let count = q.nums.length;
+    let minSz, maxSz;
+    if (count <= 4) {
+      minSz = 56; maxSz = 72;
+    } else if (count <= 6) {
+      minSz = 48; maxSz = 62;
+    } else {
+      minSz = 42; maxSz = 54;
+    }
 
-      let marginX = (cellW - sz) / 2;
-      let marginY = (cellH - sz) / 2;
-      let px = Math.round(slot.c * cellW + marginX);
-      let py = Math.round(slot.r * cellH + marginY);
+    let maxAllowed = Math.min(aw, ah) * 0.44;
+    if (maxSz > maxAllowed) {
+      let scale = maxAllowed / maxSz;
+      minSz = Math.round(minSz * scale);
+      maxSz = Math.round(maxSz * scale);
+    }
+
+    let pCircles = [];
+
+    sf.forEach(function(item) {
+      let sz = Math.round(minSz + Math.random() * (maxSz - minSz));
+      let r = sz / 2;
 
       let tex = (typeof CU_TEXTURES !== 'undefined') ? CU_TEXTURES[item.i % CU_TEXTURES.length] : null;
       let bg = tex ? tex.bg : '#ff4d6a';
       let borderColor = tex ? tex.border : 'rgba(255,255,255,0.85)';
 
-      let isCW = (Math.random() > 0.5);
-      let animName = isCW ? (Math.random() > 0.5 ? 'cuSpinCW1' : 'cuSpinCW2') : (Math.random() > 0.5 ? 'cuSpinCCW1' : 'cuSpinCCW2');
-      let dur = (12 + Math.random() * 14).toFixed(1) + 's';
-      let del = (-Math.random() * 12).toFixed(1) + 's';
+      let degPerMin = 30 + Math.random() * 270;
+      let degPerSec = degPerMin / 60;
+      let rotDir = (Math.random() > 0.5) ? 1 : -1;
+      let rotSpeed = degPerSec * rotDir;
+      let angle = Math.random() * 360;
+
+      let speed = 36 + Math.random() * 28;
+      let moveAngle = Math.random() * Math.PI * 2;
+      let vx = Math.cos(moveAngle) * speed;
+      let vy = Math.sin(moveAngle) * speed;
 
       let el = document.createElement('div');
       el.className = 'cu-circle';
       el.id = pk + 'cu' + item.i;
       el.onclick = function() { handleDuelCountUpTap(pk, item.i); };
 
-      let fontSize = Math.round(sz * (String(item.n).length > 2 ? 0.32 : 0.42));
-      el.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;left:' + px + 'px;top:' + py + 'px;' +
+      let fontSize = Math.round(sz * (String(item.n).length > 2 ? 0.35 : 0.45));
+      el.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;' +
         'background:' + bg + ';' +
         'border-color:' + borderColor + ';' +
         'font-size:' + fontSize + 'px;font-weight:900;' +
-        'text-decoration:underline;text-underline-offset:3px;' +
-        'animation:' + animName + ' ' + dur + ' linear ' + del + ' infinite;';
+        'text-decoration:underline;text-underline-offset:3px;';
       el.textContent = item.n;
       ar.appendChild(el);
+
+      let bestX = r + Math.random() * Math.max(10, aw - 2 * r);
+      let bestY = r + Math.random() * Math.max(10, ah - 2 * r);
+      let maxMinDist = -1;
+
+      for (let att = 0; att < 80; att++) {
+        let candX = r + Math.random() * Math.max(10, aw - 2 * r);
+        let candY = r + Math.random() * Math.max(10, ah - 2 * r);
+        let valid = true;
+        let closest = Infinity;
+
+        for (let j = 0; j < pCircles.length; j++) {
+          let other = pCircles[j];
+          let d = Math.hypot(candX - other.x, candY - other.y);
+          let req = r + other.r + 5;
+          if (d < req) { valid = false; }
+          if (d - (r + other.r) < closest) { closest = d - (r + other.r); }
+        }
+
+        if (valid) {
+          bestX = candX;
+          bestY = candY;
+          break;
+        }
+        if (closest > maxMinDist) {
+          maxMinDist = closest;
+          bestX = candX;
+          bestY = candY;
+        }
+      }
+
+      pCircles.push({
+        x: bestX,
+        y: bestY,
+        r: r,
+        sz: sz,
+        vx: vx,
+        vy: vy,
+        angle: angle,
+        rotSpeed: rotSpeed,
+        mass: r * r,
+        el: el,
+        done: false
+      });
     });
+
+    for (let step = 0; step < 16; step++) {
+      for (let i = 0; i < pCircles.length; i++) {
+        for (let j = i + 1; j < pCircles.length; j++) {
+          let c1 = pCircles[i], c2 = pCircles[j];
+          let dx = c2.x - c1.x, dy = c2.y - c1.y;
+          let dist = Math.hypot(dx, dy) || 0.001;
+          let req = c1.r + c2.r + 3;
+          if (dist < req) {
+            let overlap = (req - dist) * 0.5;
+            let nx = dx / dist, ny = dy / dist;
+            c1.x -= nx * overlap; c1.y -= ny * overlap;
+            c2.x += nx * overlap; c2.y += ny * overlap;
+          }
+        }
+        let cObj = pCircles[i];
+        cObj.x = Math.max(cObj.r, Math.min(aw - cObj.r, cObj.x));
+        cObj.y = Math.max(cObj.r, Math.min(ah - cObj.r, cObj.y));
+      }
+    }
+
+    for (let i = 0; i < pCircles.length; i++) {
+      let cObj = pCircles[i];
+      cObj.el.style.left = Math.round(cObj.x - cObj.r) + 'px';
+      cObj.el.style.top = Math.round(cObj.y - cObj.r) + 'px';
+      cObj.el.style.transform = 'rotate(' + cObj.angle.toFixed(1) + 'deg)';
+    }
+
+    duelCuCircles[pk] = pCircles;
+
+    if (!duelCuAnimId) {
+      startDuelCuPhysicsLoop();
+    }
     return;
   }
 
@@ -697,6 +918,7 @@ const nextDuelQuestion = function(pk) {
 
   if (q.isWeigh) {
     card.onclick = null;
+    card.classList.add('weigh-mode');
     let bh = '<div class="bwrap">';
     q.clues.forEach(function(cl, idx) {
       bh += '<div class="bitem" id="' + pk + '_bi' + idx + '"><div class="bbeam"><div class="bside bl"><div class="btray">' + cl.l.map(function(o){return o.e;}).join(' ') + '</div><div class="brope"></div></div><div class="bbar"></div><div class="bful"></div><div class="bside br"><div class="btray">' + cl.r.map(function(o){return o.e;}).join(' ') + '</div><div class="brope"></div></div></div></div>';
@@ -786,10 +1008,13 @@ const handleDuelCountUpTap = function(pk, idx) {
   if (idx === p.cuNext) {
     let el = document.getElementById(pk + 'cu' + idx);
     if (el) el.classList.add('cu-done');
+    let circles = duelCuCircles[pk];
+    if (circles && circles[idx]) circles[idx].done = true;
     p.cuNext++;
     playOk();
     if (p.cuNext >= p.cuNums.length) {
       p.ap = false;
+      stopDuelCuPhysics(pk);
       handleDuelScoring(pk, true);
       setTimeout(function() {
         nextDuelQuestion(pk);
@@ -857,6 +1082,7 @@ const handleDuelScoring = function(pk, isCorrect) {
 const endDuelCategory = function() {
   clearInterval(duel.timerId);
   duel.active = false;
+  stopDuelCuPhysics();
   if (duel.p1.memTimer) { clearTimeout(duel.p1.memTimer); duel.p1.memTimer = null; }
   if (duel.p2.memTimer) { clearTimeout(duel.p2.memTimer); duel.p2.memTimer = null; }
   let cat = duel.catList[duel.ci];

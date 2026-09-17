@@ -452,43 +452,126 @@ body.challenge-mode .gc {
   transform: scale(1.05);
 }
 
-/* Duel Weigh Balance Scales */
+/* Duel Weigh Mode Layout & Balance Scales */
+.ch-card-body.weigh-mode {
+  justify-content: flex-start;
+  padding-top: 4px;
+}
+
+.ch-card-body.weigh-mode .ins {
+  margin-top: 0;
+  margin-bottom: 2px;
+  font-size: clamp(0.8rem, 2.4vw, 1.0rem);
+  flex-shrink: 0;
+}
+
 .ch-player-arena .bwrap {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 14px;
   width: 100%;
-  margin-bottom: 6px;
-  margin-top: 2px;
+  max-width: 340px;
+  margin: 4px auto 8px auto;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
 }
 
 .ch-player-arena .bitem {
-  flex: 1;
-  max-width: 140px;
+  width: 100%;
+  max-width: 165px;
+  margin: 0 auto;
+}
+
+/* If 3 clues, the 3rd clue centers across both columns */
+.ch-player-arena .bwrap .bitem:nth-child(3):last-child {
+  grid-column: 1 / -1;
+  max-width: 165px;
+  margin: 0 auto;
+}
+
+/* If only 1 clue (edge case) */
+.ch-player-arena .bwrap .bitem:only-child {
+  grid-column: 1 / -1;
+  max-width: 180px;
+  margin: 0 auto;
 }
 
 .ch-player-arena .bbeam {
-  height: 48px;
+  height: clamp(58px, 8.5vh, 76px);
   width: 100%;
 }
 
 .ch-player-arena .btray {
-  min-width: 28px;
-  min-height: 20px;
-  font-size: 1.15rem;
-  padding: 1px 2px;
+  min-width: 36px;
+  min-height: 25px;
+  font-size: clamp(1.25rem, 3.8vw, 1.55rem);
+  padding: 2px 4px;
+  border-width: 3px;
+  border-radius: 6px 6px 8px 8px;
 }
 
 .ch-player-arena .bful {
-  border-left-width: 8px;
-  border-right-width: 8px;
-  border-bottom-width: 11px;
+  border-left-width: 10px;
+  border-right-width: 10px;
+  border-bottom-width: 14px;
 }
 
 .ch-player-arena .bbar {
-  bottom: 9px;
+  bottom: 12px;
+  height: 4px;
+}
+
+.ch-player-arena .bside {
+  bottom: 14px;
+}
+
+.ch-player-arena .brope {
+  width: 3px;
+  height: 9px;
+}
+
+.ch-player-arena .tl .bside.bl {
+  bottom: 5px;
+}
+.ch-player-arena .tl .bside.bl .brope {
   height: 3px;
+}
+.ch-player-arena .tl .bside.br {
+  bottom: 22px;
+}
+.ch-player-arena .tl .bside.br .brope {
+  height: 14px;
+}
+
+.ch-player-arena .tr .bbar {
+  transform: rotate(7deg);
+}
+.ch-player-arena .tr .bside.br {
+  bottom: 5px;
+}
+.ch-player-arena .tr .bside.br .brope {
+  height: 3px;
+}
+.ch-player-arena .tr .bside.bl {
+  bottom: 22px;
+}
+.ch-player-arena .tr .bside.bl .brope {
+  height: 14px;
+}
+
+.ch-card-body.weigh-mode .og {
+  width: 100%;
+  max-width: 330px;
+  margin-top: auto;
+  gap: 6px;
+  padding-bottom: 2px;
+}
+
+.ch-card-body.weigh-mode .ob {
+  min-height: 38px;
+  padding: 6px 4px;
+  font-size: clamp(1.25rem, 4vw, 1.6rem);
 }
 
 /* Duel Visualize 3D Cubes */
