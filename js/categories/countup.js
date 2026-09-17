@@ -88,9 +88,8 @@ const gCU = function(d) {
     var bg = tex ? tex.bg : '#ff4d6a';
     var borderColor = tex ? tex.border : 'rgba(255,255,255,0.85)';
 
-    // Rotation speed: between 30° and 300° per minute (0.5°/s to 5.0°/s) in CW or CCW direction
-    var degPerMin = 30 + Math.random() * 270;
-    var degPerSec = degPerMin / 60;
+    // Rotation speed: between 30° and 300° per second in CW or CCW direction
+    var degPerSec = 30 + Math.random() * 270;
     var rotDir = (Math.random() > 0.5) ? 1 : -1;
     var rotSpeed = degPerSec * rotDir;
     var angle = Math.random() * 360;

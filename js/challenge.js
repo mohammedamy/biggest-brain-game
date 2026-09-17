@@ -764,8 +764,8 @@ const nextDuelQuestion = function(pk) {
       let bg = tex ? tex.bg : '#ff4d6a';
       let borderColor = tex ? tex.border : 'rgba(255,255,255,0.85)';
 
-      let degPerMin = 30 + Math.random() * 270;
-      let degPerSec = degPerMin / 60;
+      // Rotation speed: between 30° and 300° per second in CW or CCW direction
+      let degPerSec = 30 + Math.random() * 270;
       let rotDir = (Math.random() > 0.5) ? 1 : -1;
       let rotSpeed = degPerSec * rotDir;
       let angle = Math.random() * 360;
