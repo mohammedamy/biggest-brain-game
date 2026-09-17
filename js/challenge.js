@@ -438,7 +438,7 @@ const showDuelMemInput = function(pk) {
     '<div class="nk" onclick="handleDuelMemTap(\'' + pk + '\', 4)">4</div><div class="nk" onclick="handleDuelMemTap(\'' + pk + '\', 5)">5</div><div class="nk" onclick="handleDuelMemTap(\'' + pk + '\', 6)">6</div>' +
     '<div class="nk" onclick="handleDuelMemTap(\'' + pk + '\', 7)">7</div><div class="nk" onclick="handleDuelMemTap(\'' + pk + '\', 8)">8</div><div class="nk" onclick="handleDuelMemTap(\'' + pk + '\', 9)">9</div>' +
     '<div class="nk nk-del" onclick="handleDuelMemDel(\'' + pk + '\')">⌫</div><div class="nk" onclick="handleDuelMemTap(\'' + pk + '\', 0)">0</div>' +
-    '<div class="nk" style="background:rgba(91,200,160,.12);border-color:var(--green)" onclick="handleDuelMemSub(\'' + pk + '\')">✓</div>' +
+    '<div class="nk nk-sub" onclick="handleDuelMemSub(\'' + pk + '\')">✓</div>' +
   '</div>';
 
   card.innerHTML = '<div class="ins">Enter sequence</div>' + boxes + npHtml;
@@ -608,40 +608,40 @@ const nextDuelQuestion = function(pk) {
     for (let r = 0; r < rows; r++) for (let cl = 0; cl < cols; cl++) slots.push({ r: r, c: cl });
     slots = shuf(slots);
 
-    let colors = ['#ff4d6a', '#ffd93d', '#6bcb77', '#4d96ff', '#ff884b', '#c780fa', '#2abfbf', '#ff6b8b'];
     let sf = shuf(p.cuNums.map(function(n, i) { return { n: n, i: i }; }));
 
     sf.forEach(function(item, idx) {
       let slot = slots[idx % slots.length];
-      let maxSz = Math.min(cellW * 0.70, cellH * 0.70, 48);
-      let minSz = Math.min(cellW * 0.56, cellH * 0.56, 38);
+      let maxSz = Math.min(cellW * 0.74, cellH * 0.74, 48);
+      let minSz = Math.max(30, Math.min(cellW * 0.46, cellH * 0.46, 36));
       let sz = Math.round(minSz + Math.random() * (maxSz - minSz));
 
       let marginX = (cellW - sz) / 2;
       let marginY = (cellH - sz) / 2;
-      let safeMarginX = Math.max(0, marginX - 5);
-      let safeMarginY = Math.max(0, marginY - 5);
-      let jitterX = (Math.random() * 2 - 1) * Math.min(safeMarginX, 2.5);
-      let jitterY = (Math.random() * 2 - 1) * Math.min(safeMarginY, 2.5);
+      let px = Math.round(slot.c * cellW + marginX);
+      let py = Math.round(slot.r * cellH + marginY);
 
-      let px = Math.round(slot.c * cellW + marginX + jitterX);
-      let py = Math.round(slot.r * cellH + marginY + jitterY);
+      let tex = (typeof CU_TEXTURES !== 'undefined') ? CU_TEXTURES[item.i % CU_TEXTURES.length] : null;
+      let bg = tex ? tex.bg : '#ff4d6a';
+      let borderColor = tex ? tex.border : 'rgba(255,255,255,0.85)';
 
-      let col = colors[item.i % colors.length];
-      let animName = 'cuFloat' + ((idx % 4) + 1);
-      let dur = (2.6 + Math.random() * 1.2).toFixed(1) + 's';
-      let del = (Math.random() * 1.5).toFixed(1) + 's';
+      let isCW = (Math.random() > 0.5);
+      let animName = isCW ? (Math.random() > 0.5 ? 'cuSpinCW1' : 'cuSpinCW2') : (Math.random() > 0.5 ? 'cuSpinCCW1' : 'cuSpinCCW2');
+      let dur = (12 + Math.random() * 14).toFixed(1) + 's';
+      let del = (-Math.random() * 12).toFixed(1) + 's';
 
       let el = document.createElement('div');
       el.className = 'cu-circle';
       el.id = pk + 'cu' + item.i;
       el.onclick = function() { handleDuelCountUpTap(pk, item.i); };
 
-      let fontSize = Math.round(sz * (String(item.n).length > 2 ? 0.32 : 0.40));
+      let fontSize = Math.round(sz * (String(item.n).length > 2 ? 0.32 : 0.42));
       el.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;left:' + px + 'px;top:' + py + 'px;' +
-        'background:' + col + ';font-size:' + fontSize + 'px;font-weight:800;' +
+        'background:' + bg + ';' +
+        'border-color:' + borderColor + ';' +
+        'font-size:' + fontSize + 'px;font-weight:900;' +
         'text-decoration:underline;text-underline-offset:3px;' +
-        'animation:' + animName + ' ' + dur + ' ease-in-out ' + del + ' infinite;';
+        'animation:' + animName + ' ' + dur + ' linear ' + del + ' infinite;';
       el.textContent = item.n;
       ar.appendChild(el);
     });
@@ -685,7 +685,7 @@ const nextDuelQuestion = function(pk) {
       '<div class="nk" onclick="handleDuelVisTap(\'' + pk + '\', 4)">4</div><div class="nk" onclick="handleDuelVisTap(\'' + pk + '\', 5)">5</div><div class="nk" onclick="handleDuelVisTap(\'' + pk + '\', 6)">6</div>' +
       '<div class="nk" onclick="handleDuelVisTap(\'' + pk + '\', 7)">7</div><div class="nk" onclick="handleDuelVisTap(\'' + pk + '\', 8)">8</div><div class="nk" onclick="handleDuelVisTap(\'' + pk + '\', 9)">9</div>' +
       '<div class="nk nk-del" onclick="handleDuelVisDel(\'' + pk + '\')">⌫</div><div class="nk" onclick="handleDuelVisTap(\'' + pk + '\', 0)">0</div>' +
-      '<div class="nk" style="background:rgba(91,200,160,.12);border-color:var(--green)" onclick="handleDuelVisSub(\'' + pk + '\')">✓</div>' +
+      '<div class="nk nk-sub" onclick="handleDuelVisSub(\'' + pk + '\')">✓</div>' +
     '</div>';
 
     card.innerHTML = '<div class="ins">' + q.ins + '</div>' +

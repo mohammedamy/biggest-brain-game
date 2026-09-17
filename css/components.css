@@ -556,16 +556,16 @@
   align-items: center;
   justify-content: center;
   font-family: 'Fredoka', sans-serif;
-  font-weight: 800;
+  font-weight: 900;
   cursor: pointer;
   touch-action: manipulation;
   color: #fff;
   border: 3.5px solid rgba(255, 255, 255, .85);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, .35), inset 0 2px 5px rgba(255, 255, 255, .3);
-  text-shadow: 0 2px 4px rgba(0, 0, 0, .75), 0 0 2px rgba(0, 0, 0, .9);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .45), inset 0 3px 6px rgba(255, 255, 255, .4), inset 0 -4px 8px rgba(0, 0, 0, .5);
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.95), 0 0 3px #000, 0 0 8px rgba(0, 0, 0, 0.7);
   user-select: none;
   -webkit-user-select: none;
-  transition: opacity .25s ease, transform .15s ease;
+  transition: opacity .25s ease, transform .12s ease;
 }
 .cu-circle:active {
   transform: scale(.88) !important;

@@ -77,42 +77,44 @@ const gCU = function(d) {
     var slotLeft = slot.c * cellW;
     var slotTop = slot.r * cellH;
 
-    // Sized safely within cell boundaries to guarantee zero overlap while moving
-    var maxSz = Math.min(cellW * 0.70, cellH * 0.70, 78);
-    var minSz = Math.min(cellW * 0.56, cellH * 0.56, 62);
-    var sz = Math.round(ri(Math.floor(minSz), Math.floor(maxSz)));
+    // Disks vary in radius randomly while strictly respecting cell bounds
+    var maxSz = Math.min(cellW * 0.74, cellH * 0.74, 86);
+    var minSz = Math.max(46, Math.min(cellW * 0.44, cellH * 0.44, 54));
+    var sz = Math.round(minSz + Math.random() * (maxSz - minSz));
 
-    // Bounded placement strictly preserving movement clearance margin
+    // Centered placement with generous safe clearance
     var marginX = (cellW - sz) / 2;
     var marginY = (cellH - sz) / 2;
-    var safeMarginX = Math.max(0, marginX - 6);
-    var safeMarginY = Math.max(0, marginY - 6);
-    var jitterX = (Math.random() * 2 - 1) * Math.min(safeMarginX, 3);
-    var jitterY = (Math.random() * 2 - 1) * Math.min(safeMarginY, 3);
+    var px = Math.round(slotLeft + marginX);
+    var py = Math.round(slotTop + marginY);
 
-    var px = Math.round(slotLeft + marginX + jitterX);
-    var py = Math.round(slotTop + marginY + jitterY);
+    // High-contrast tactile texture fill
+    var tex = (typeof CU_TEXTURES !== 'undefined') ? CU_TEXTURES[item.i % CU_TEXTURES.length] : null;
+    var bg = tex ? tex.bg : '#ff4d6a';
+    var borderColor = tex ? tex.border : 'rgba(255,255,255,0.85)';
 
-    var col = cCols[item.i % cCols.length];
-    var animName = 'cuFloat' + ((idx % 4) + 1);
-    var dur = (ri(26, 38) / 10) + 's';
-    var del = (ri(0, 18) / 10) + 's';
+    // Disks rotate in random directions (Clockwise or Counter-Clockwise) with varied speeds
+    var isCW = (Math.random() > 0.5);
+    var animName = isCW ? (Math.random() > 0.5 ? 'cuSpinCW1' : 'cuSpinCW2') : (Math.random() > 0.5 ? 'cuSpinCCW1' : 'cuSpinCCW2');
+    var dur = (12 + Math.random() * 14).toFixed(1) + 's';
+    var del = (-Math.random() * 12).toFixed(1) + 's';
 
     var el = document.createElement('div');
     el.className = 'cu-circle';
     el.id = 'cu' + item.i;
     el.onclick = function() { cuTap(item.i); };
 
-    // All numbers are bold and underlined with lively rotation & floating animation
-    var fontSize = Math.round(sz * (String(item.n).length > 2 ? 0.32 : 0.40));
+    // Bold, underlined text with proportional font size for maximum contrast
+    var fontSize = Math.round(sz * (String(item.n).length > 2 ? 0.32 : 0.42));
 
     el.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;' +
       'left:' + px + 'px;top:' + py + 'px;' +
-      'background:' + col + ';' +
+      'background:' + bg + ';' +
+      'border-color:' + borderColor + ';' +
       'font-size:' + fontSize + 'px;' +
-      'font-weight:800;' +
+      'font-weight:900;' +
       'text-decoration:underline;text-underline-offset:4px;' +
-      'animation:' + animName + ' ' + dur + ' ease-in-out ' + del + ' infinite;';
+      'animation:' + animName + ' ' + dur + ' linear ' + del + ' infinite;';
 
     el.textContent = item.n;
     ar.appendChild(el);

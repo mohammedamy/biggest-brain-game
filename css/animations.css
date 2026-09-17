@@ -198,4 +198,79 @@
   }
 }
 
+/* Count Up Disks: Spin Clockwise while floating */
+@keyframes cuSpinCW1 {
+  0% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  25% {
+    transform: translate(2px, -2px) rotate(90deg);
+  }
+  50% {
+    transform: translate(-2px, 1.5px) rotate(180deg);
+  }
+  75% {
+    transform: translate(-1.5px, -2px) rotate(270deg);
+  }
+  100% {
+    transform: translate(0px, 0px) rotate(360deg);
+  }
+}
+
+@keyframes cuSpinCW2 {
+  0% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  25% {
+    transform: translate(-2px, 2px) rotate(90deg);
+  }
+  50% {
+    transform: translate(2px, -1.5px) rotate(180deg);
+  }
+  75% {
+    transform: translate(1.5px, 2px) rotate(270deg);
+  }
+  100% {
+    transform: translate(0px, 0px) rotate(360deg);
+  }
+}
+
+/* Count Up Disks: Spin Counter-Clockwise while floating */
+@keyframes cuSpinCCW1 {
+  0% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  25% {
+    transform: translate(-2px, 2px) rotate(-90deg);
+  }
+  50% {
+    transform: translate(2px, -2px) rotate(-180deg);
+  }
+  75% {
+    transform: translate(1.5px, 2px) rotate(-270deg);
+  }
+  100% {
+    transform: translate(0px, 0px) rotate(-360deg);
+  }
+}
+
+@keyframes cuSpinCCW2 {
+  0% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  25% {
+    transform: translate(2px, -2px) rotate(-90deg);
+  }
+  50% {
+    transform: translate(-2px, 2px) rotate(-180deg);
+  }
+  75% {
+    transform: translate(-1.5px, -2px) rotate(-270deg);
+  }
+  100% {
+    transform: translate(0px, 0px) rotate(-360deg);
+  }
+}
+
+
 
