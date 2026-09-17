@@ -1,0 +1,122 @@
+/* css/animations.css - All @keyframes */
+@keyframes bgShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes sIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes tp {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.12);
+  }
+}
+@keyframes pi {
+  0% {
+    transform: scale(.95);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes sh {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+@keyframes flyUp {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(.5);
+  }
+  30% {
+    transform: translate(-50%, -70%) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -120%) scale(.7);
+  }
+}
+@keyframes ePop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translate(-50%, -60%) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -100%) scale(.6);
+  }
+}
+@keyframes cdP {
+  0% {
+    transform: scale(.3);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes cubeEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes cubeFall {
+  from {
+    opacity: 0;
+    transform: translateY(-40px) scale(.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes hpvFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
+  }
+  50% {
+    transform: translateY(-3px) rotate(-2deg);
+    box-shadow: 0 6px 10px rgba(42, 191, 191, .25);
+  }
+}

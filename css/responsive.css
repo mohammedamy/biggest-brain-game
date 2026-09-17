@@ -1,0 +1,143 @@
+/* css/responsive.css - All @media queries */
+@media (max-height: 720px) {
+  .gc {
+    padding: 3px 7px;
+  }
+  .ct {
+    padding: 2px 5px;
+    gap: 6px;
+  }
+  .ct .ct-logo {
+    width: 30px;
+  }
+  .ct .c1 {
+    font-size: clamp(.85rem, 3.2vw, 1.4rem);
+  }
+  .ct .c2 {
+    font-size: clamp(1rem, 2.9vw, 1.3rem);
+  }
+  .ht {
+    font-size: clamp(1.1rem, 3.8vw, 1.6rem);
+    line-height: 1.05;
+  }
+  .ht .em {
+    font-size: clamp(1.25rem, 4.3vw, 1.9rem);
+    margin-bottom: 0;
+  }
+  .btn {
+    padding: 8px 12px;
+    font-size: clamp(.8rem, 2.2vw, .95rem);
+  }
+  .bg2 {
+    gap: 4px;
+  }
+  .rbox {
+    padding: 3px 10px;
+    margin-bottom: 2px;
+  }
+  .rbox .ri {
+    font-size: 1.2rem;
+  }
+  .rbox .rn {
+    font-size: .85rem;
+  }
+  .rbox .rs {
+    font-size: .58rem;
+  }
+  .hpv-item {
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
+  }
+  .ob {
+    padding: 9px 5px;
+    min-height: 44px;
+  }
+  .numpad .nk {
+    padding: 7px 0;
+    font-size: 1.6rem;
+  }
+}
+@media (max-height: 620px) {
+  .ct .ct-logo {
+    width: 26px;
+  }
+  .ct .c1 {
+    font-size: .85rem;
+  }
+  .ct .c2 {
+    font-size: .95rem;
+  }
+  .ht {
+    font-size: 1.05rem;
+  }
+  .ht .em {
+    font-size: 1.2rem;
+  }
+  .sub {
+    display: none;
+  }
+  .rbox {
+    padding: 2px 8px;
+  }
+  .rbox .ri {
+    display: none;
+  }
+  .rbox .rn {
+    font-size: .78rem;
+    display: inline;
+  }
+  .rbox .rs {
+    font-size: .55rem;
+    margin-left: 6px;
+    display: inline;
+  }
+  .hpv {
+    margin: 1px 0 2px;
+  }
+  .hpv-item {
+    width: 24px;
+    height: 24px;
+    font-size: .85rem;
+  }
+  .btn {
+    padding: 7px 10px;
+    font-size: .85rem;
+  }
+  .ob {
+    font-size: clamp(1.1rem, 3.8vw, 1.5rem);
+    min-height: 40px;
+    padding: 7px 4px;
+  }
+  .cd2 {
+    font-size: clamp(1.3rem, 4.5vw, 2rem);
+    margin-bottom: 5px;
+  }
+  .numpad {
+    max-width: 190px;
+    gap: 3px;
+  }
+  .numpad .nk {
+    padding: 5px 0;
+    font-size: 1.4rem;
+  }
+}
+@media (max-height: 650px) {
+  #homeScreen .hpv {
+    display: none;
+  }
+  #homeScreen .sub {
+    display: none;
+  }
+}
+@media (max-height: 560px) {
+  #homeScreen .ht .em {
+    display: none;
+  }
+  #homeScreen .rbox {
+    padding: 2px 12px;
+  }
+  #homeScreen .rbox .ri {
+    font-size: 1rem;
+  }
+}
